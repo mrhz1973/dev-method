@@ -17,7 +17,7 @@ Do not read everything by default. Use the reading order and conditional section
 |------|------|
 | Starting a new project integration | `adapters/project-import.md` |
 | Working on a GAS/Apps Script project | `adapters/apps-script-gas.md` |
-| Working on a single-file HTML project | `adapters/single-file-html.md` |
+| Working on a single-file HTML project or any large single file | `adapters/single-file-html.md` |
 | Architecting or reviewing automation | `patterns/b-plus-minimal-confined.md` |
 | Working with file-based task queues | `patterns/file-based-task-lifecycle.md` |
 | Working with scheduled jobs | `patterns/scheduled-automation.md` |

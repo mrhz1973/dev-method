@@ -26,6 +26,22 @@ Organize the file into clear sections using comments.
 Do not split the file into modules prematurely.
 A real bottleneck is: build time impact, merge conflict frequency, or performance measurably degraded.
 
+## Large-file / token-efficiency policy
+
+A large single-file project must not be read wholesale by an AI agent unless there is a clear reason to do so. Token efficiency has priority over convenience.
+
+Default workflow for large files is marker/range based. Preferred methods:
+
+- `grep` / `Select-String` for markers, function names, IDs, event handlers, translation keys, state variables.
+- Reading narrow line ranges around matched markers only.
+- Targeted `git diff` for changed areas only.
+- Extracting inline script blocks and running `node --check` on those blocks when applicable.
+- Making small, scoped patches rather than full-file reads and rewrites.
+
+Splitting is not automatically required to reduce token usage. Splitting is a separate architecture decision and remains gated if it changes delivery, runtime, or deployment.
+
+Do not use token pressure alone as a reason to split the architecture. If a file becomes too large for safe AI work, first improve marker discipline, internal section comments, range-based patching, and validation commands. Only consider split when there is a real bottleneck: repeated merge conflicts, unacceptable edit risk, delivery/runtime need, or measurable maintainability failure.
+
 ## Splitting requires a gate
 
 If splitting the file changes the project architecture (introduces a build step, changes deployment, affects how the file is distributed), that is a non-trivial architectural change and requires a human gate before proceeding.

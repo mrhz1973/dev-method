@@ -38,6 +38,7 @@ Pilot objectives:
 - Batch recoverable work.
 - Gate irreversible/high-risk actions.
 - Manual-test only at milestones.
+- Validate large-file token-efficiency policy during adoption before considering any split/refactor pattern.
 
 ## v0.2.0 — Template Pack Expansion
 
