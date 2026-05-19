@@ -97,6 +97,8 @@ Spec: `patterns/local-handoff-generator.md`.
 Evolution path: v0 (manual spec) → v1 (local script) → v2 (gated runner) → v3 (n8n orchestration).
 First target: GIS Tool (`mrhz1973/cursor-coordinate-converter`).
 
+**Next concrete target:** v1 script spec is defined in `patterns/local-handoff-generator.md` § v1 local script specification. Implementation may begin once v0 is validated end-to-end on GIS Tool and Cursor (or another suitable runtime) is locally available.
+
 ### Other potential future work
 
 - Ollama classifier/router/risk scorer.

@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added v1 script specification to `patterns/local-handoff-generator.md`: command shape, required inputs/output, safety behavior, git read-only contract, prompt assembly rules, acceptance test, and evolution boundary; updated ROADMAP.md next-target note.
 - Added `patterns/local-handoff-generator.md`: pre-runner pattern for generating IDE-agent handoff prompts from operational repo orchestrator docs; added LLMS.md pointer and ROADMAP.md entry.
 - Added handoff-hardening checkpoint to `ROADMAP.md`: unreleased-since-v0.1.1 summary and v0.1.2 candidate checklist.
 - Added PASS + follow-up UX request rule to `patterns/qa-pass-implementer-handoff.md`; added pointer in `patterns/idea-intake-during-use.md`.
