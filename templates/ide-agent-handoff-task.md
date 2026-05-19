@@ -68,11 +68,15 @@ GATES NOT TRIGGERED BY:
 FINAL REPORT (required):
 - Repo path:
 - Branch:
-- Files changed:
+- Files changed (only allowed files staged):
+- git status --short after push:
 - Commit hash:
 - Push result:
+- QA / checks result:
 - Next recommended block:
 - Gate required: yes / no
+
+Implementation summary without commit/push evidence is not final.
 ```
 
 ---

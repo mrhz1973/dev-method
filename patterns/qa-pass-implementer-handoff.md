@@ -76,6 +76,10 @@ When implemented with n8n / OpenClaw / runner:
 - never bypasses gates;
 - when a generated prompt authorizes commit and push, the implementer follows the commit-and-push rules in `prompts/implementer-standard.md` — automation does not grant deploy, tag, or release permission.
 
+## Completion evidence note
+
+A handoff is complete only when GitHub-visible evidence exists: commit hash and push result. Descriptive IDE completion messages — including "feedback submitted" or "implementation done" — are not sufficient. See the completion evidence rule in `prompts/implementer-standard.md`.
+
 ## Required PASS fields
 
 - Repo:

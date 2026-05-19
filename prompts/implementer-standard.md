@@ -128,6 +128,25 @@ When a task explicitly authorizes commit **and** push:
 When a task does **not** explicitly authorize push:
 - Commit locally if authorized; otherwise stop and report.
 
+### Completion evidence rule
+
+"Done", "implemented", or IDE status messages such as "feedback submitted" are **not** final task completion signals.
+
+For any task that authorizes commit + push, the task is complete only when all of the following exist:
+
+1. Static/check results — or explicit reason checks were NOT EXECUTED.
+2. Exact list of changed files, confirming only allowed files were staged.
+3. Commit hash.
+4. Push result (success or explicit failure reason — never force-push on rejection).
+5. `git status --short` after push.
+6. Final report delivered.
+
+If implementation is done but commit or push has not happened, continue to commit/push when the task authorizes it — do not stop with a descriptive summary.
+
+If push fails or is rejected/non-fast-forward, stop and report; never force-push.
+
+Git/GitHub evidence is the source of truth. IDE UI messages are not.
+
 ---
 
 ## Tool-specific notes
