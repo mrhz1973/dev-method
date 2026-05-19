@@ -36,6 +36,7 @@ CODE mode may create/edit files, run checks, commit selectively, and push when t
 **DEBUG**
 Use when the task starts from a bug, failing check, inconsistent behavior, broken workflow, regression, or unclear failure.
 DEBUG mode must first inspect evidence, reproduce or isolate the issue when possible, then propose or implement the smallest safe fix.
+If context is compacted mid-debug, do not continue from memory — reconstruct evidence first. See `patterns/context-compaction-debug-reconstruction.md`.
 
 ### Model guidance
 

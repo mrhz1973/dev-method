@@ -40,6 +40,7 @@ Pilot objectives:
 - Manual-test only at milestones.
 - Validate large-file token-efficiency policy during adoption before considering any split/refactor pattern.
 - Validate session/repo guard and idea-intake patterns (including prompt/template integration) during GIS Tool adoption.
+- Validate context compaction / debug reconstruction policy during first real DEBUG session on GIS Tool.
 
 ## v0.2.0 — Template Pack Expansion
 

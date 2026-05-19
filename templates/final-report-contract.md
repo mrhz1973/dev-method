@@ -42,6 +42,14 @@ _[clean | dirty — if dirty, list uncommitted files and reason]_
 
 ---
 
+## Context compaction (DEBUG only)
+
+- **Compaction occurred during this task:** yes / no / not applicable
+- **Reconstruction performed before patching:** yes / no / not applicable
+- **Uncertain items after reconstruction:** _[list or "none"]_
+
+---
+
 ## Session / repo used
 
 - **Repo:**
