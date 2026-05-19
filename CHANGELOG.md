@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Consistency audit: clarified push-authorization conditionality in `templates/ide-agent-handoff-task.md`; added IDE-agent template pointer in `LLMS.md` read-when-relevant table.
 - Added `templates/ide-agent-handoff-task.md`: compact copy-paste template for IDE agent (Windsurf/Cascade) handoff prompts; added IDE-agent pointer in `patterns/qa-pass-implementer-handoff.md`.
 - Added multi-repo workspace guard rule to `prompts/implementer-standard.md`; added pointer in `patterns/qa-pass-implementer-handoff.md`.
 - Added QA PASS → implementer handoff pattern.

@@ -47,7 +47,7 @@ EXECUTION RULES (do not loosen these):
 - Stage only ALLOWED_FILES. Never use git add .
 - No full-file read for large single-file HTML unless explicitly justified.
 - Commit: COMMIT_MESSAGE
-- Push origin main after commit (authorized).
+- Push origin main after commit (authorized — remove this line if push is not authorized for this task).
 - Record result in INBOX_RECORD_PATH if applicable.
 
 STOP ONLY FOR:
