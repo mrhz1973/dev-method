@@ -46,6 +46,15 @@ Automatic handoff is not allowed for:
 
 When a handoff test involves reading method docs (e.g. `dev-method`) while the operational work targets another repo, both the session/repo guard and the multi-repo workspace guard apply. See the canonical rule in `prompts/implementer-standard.md` — the method repo must not be modified during the handoff.
 
+## IDE agent handoff (Windsurf / Cascade and equivalents)
+
+Use `templates/ide-agent-handoff-task.md` to generate the implementer prompt for IDE agents.
+
+Key points:
+- Open the **operational repo** as the workspace, not `dev-method`.
+- If Windsurf (or any IDE agent) is opened in `dev-method` while the target is another repo, stop — do not edit — ask the user to reopen in the correct repo.
+- The template contains all canonical safety rules as placeholders; fill them in rather than rewriting the rules from scratch. This keeps prompts short and consistent.
+
 ## Manual mode fallback
 
 Until automation exists:
