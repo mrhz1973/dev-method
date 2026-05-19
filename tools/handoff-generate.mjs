@@ -111,6 +111,16 @@ function safeRead(p) {
 }
 
 // ---------------------------------------------------------------------------
+// Implementer labels
+// ---------------------------------------------------------------------------
+
+const IMPLEMENTER_LABELS = {
+  windsurf: 'Windsurf Cascade',
+  cursor: 'Cursor',
+  'claude-code': 'Claude Code',
+};
+
+// ---------------------------------------------------------------------------
 // Discovery helpers
 // ---------------------------------------------------------------------------
 
@@ -257,6 +267,34 @@ function extractEmbeddedHandoffPrompt(inboxContent) {
   return null;
 }
 
+// Normalize known implementer target lines in an embedded handoff prompt.
+function normalizeEmbeddedPrompt(prompt, implementerLabel) {
+  if (!prompt || !implementerLabel) return prompt;
+  let out = prompt;
+  if (/^Preferred implementer:\s*.*/im.test(out)) {
+    out = out.replace(
+      /^Preferred implementer:\s*.*/im,
+      `Preferred implementer: ${implementerLabel}`,
+    );
+  }
+  if (/^Implementer:\s*.*/im.test(out)) {
+    out = out.replace(/^Implementer:\s*.*/im, `Implementer: ${implementerLabel}`);
+  }
+  return out;
+}
+
+// Detect clear push authorization in prompt text (metadata only; generator never pushes).
+function detectPushAuthorizedFromPrompt(prompt) {
+  if (!prompt) return 'no';
+  const patterns = [
+    /push\s+to\s+origin\s+main\s*\(\s*authorized\s*\)/i,
+    /push\s+origin\s+main\s+after\s+commit\s*\(\s*authorized\s*\)/i,
+    /push\s+is\s+explicitly\s+authorized/i,
+    /push\s+authorized:\s*yes\b/i,
+  ];
+  return patterns.some((p) => p.test(prompt)) ? 'yes' : 'no';
+}
+
 function discover(content) {
   return {
     nextPass: extractLine(content, [
@@ -299,12 +337,6 @@ function loadTemplate(methodPath) {
 // ---------------------------------------------------------------------------
 // Template filler
 // ---------------------------------------------------------------------------
-
-const IMPLEMENTER_LABELS = {
-  windsurf: 'Windsurf Cascade',
-  cursor: 'Cursor',
-  'claude-code': 'Claude Code',
-};
 
 function inline(s, fallback) {
   if (!s) return fallback;
@@ -491,8 +523,12 @@ function main() {
   let promptSource;
 
   if (embeddedPrompt) {
-    prompt = embeddedPrompt;
+    const implementerLabel = IMPLEMENTER_LABELS[args.implementer];
+    prompt = normalizeEmbeddedPrompt(embeddedPrompt, implementerLabel);
     promptSource = 'embedded inbox handoff prompt';
+    if (args.pushAuthorized !== 'yes') {
+      pushAuthorized = detectPushAuthorizedFromPrompt(prompt);
+    }
   } else {
     let tpl;
     try { tpl = loadTemplate(methodPath); }

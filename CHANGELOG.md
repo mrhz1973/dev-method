@@ -4,6 +4,7 @@
 
 - Fixed local handoff generator inbox discovery to prefer the current top "Ultimo aggiornamento" entry and otherwise the newest referenced inbox; trim TASK_DISCOVERY_DOCS to keep adjacent prose spaced.
 - Handoff generator: when the selected inbox contains a fenced copy-paste-ready prompt under a Future/handoff prompt heading, use that embedded prompt as the generated body instead of the generic template skeleton; metadata reports prompt source.
+- Handoff generator: normalize embedded prompt implementer lines (`Preferred implementer:` / `Implementer:`) to match `--implementer`; metadata `Push authorized` reflects clear push phrases in the embedded prompt (generator still never pushes).
 - Added `tools/handoff-generate.mjs`: v1 local handoff generator script; reads operational repo orchestrator docs, generates a ready-to-review IDE-agent handoff prompt, writes to stdout or an explicit output file; no npm dependencies; read-only git; never commits, pushes, launches any runner, or reads secrets.
 - Added v1 script specification to `patterns/local-handoff-generator.md`: command shape, required inputs/output, safety behavior, git read-only contract, prompt assembly rules, acceptance test, and evolution boundary; updated ROADMAP.md next-target note.
 - Added `patterns/local-handoff-generator.md`: pre-runner pattern for generating IDE-agent handoff prompts from operational repo orchestrator docs; added LLMS.md pointer and ROADMAP.md entry.
