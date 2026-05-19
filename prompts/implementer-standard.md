@@ -67,6 +67,20 @@ If the user reports an idea, bug, or UX note during live usage, do not implement
 
 ---
 
+## Multi-repo workspace guard
+
+When a task involves both a method/reference repo (e.g. `dev-method`) and an operational/target repo (e.g. `cursor-coordinate-converter`):
+
+1. Identify the **operational repo** before any edit — the only repo where edits, commits, and pushes are allowed.
+2. Identify the **method/reference repo** separately — may be read for guidance but must not be modified unless the task explicitly states the method repo itself is the target.
+3. Verify the **current git root** matches the operational repo before touching any file. If the workspace root is the method repo while the task target is another repo, stop immediately and tell the user to open the target repo.
+4. Do not create files, commits, or pushes in the method/reference repo while executing a task for another repo.
+5. This rule applies to all IDE agents: Windsurf/Cascade, Cursor, Claude Code, and equivalents.
+
+**Trigger example:** Windsurf opened in `dev-method` while the task target is `cursor-coordinate-converter` → stop, do not edit, ask user to reopen in the correct repo.
+
+---
+
 ## Large-file / token-efficiency rule
 
 When working on large files — especially large single-file HTML projects — do not read the whole file unless there is a clear reason.

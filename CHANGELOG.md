@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added multi-repo workspace guard rule to `prompts/implementer-standard.md`; added pointer in `patterns/qa-pass-implementer-handoff.md`.
 - Added QA PASS → implementer handoff pattern.
 - Clarified authorized commit + push flow: canonical rule in `prompts/implementer-standard.md`, pointer updates in task templates, final report contract, and QA handoff pattern.
 

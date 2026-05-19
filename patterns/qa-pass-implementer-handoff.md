@@ -42,6 +42,10 @@ Automatic handoff is not allowed for:
 - branch/history rewrite;
 - unclear scope.
 
+## Multi-repo note
+
+When a handoff test involves reading method docs (e.g. `dev-method`) while the operational work targets another repo, both the session/repo guard and the multi-repo workspace guard apply. See the canonical rule in `prompts/implementer-standard.md` — the method repo must not be modified during the handoff.
+
 ## Manual mode fallback
 
 Until automation exists:
