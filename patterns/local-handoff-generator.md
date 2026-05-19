@@ -242,14 +242,14 @@ Embedded inbox prompts may include structured lines near the top (first matching
 
 | Field | Purpose |
 |-------|---------|
-| `TASK STATUS:` | `pending` \| `in-progress` \| `resolved` — `resolved` marks the handoff not ready |
+| `TASK STATUS:` | `pending` \| `resolved` only — `resolved` marks not ready; `in-progress` is rejected |
 | `Operation type:` | `code-change` \| `docs-only` \| `record-pass` \| `plan` \| `fix` \| `refactor` |
 | `Commit:` | `authorized` \| `not authorized` — metadata only; generator never commits |
 | `Push:` | `authorized` \| `not authorized` — takes precedence over legacy prose detection |
 | `Target file(s):` | explicit paths or `docs-only` |
 | `Risk level:` | `low` \| `medium` \| `high` |
 
-Generated output reports these as metadata lines. Legacy embedded prompts without canonical fields continue to work; push authorization still falls back to prose patterns when `Push:` is absent.
+Generated output reports these as metadata lines plus `Embedded format: structured|legacy|none`. Conflicting structured `TASK STATUS` / `Commit` / `Push` values are hard errors. `--strict-format` rejects legacy embedded prompts. Legacy prose fallback when `Push:` is absent remains available but is marked deprecated (removal planned v0.2.0). Smoke tests: `node tests/run-handoff-generator-smoke.mjs`.
 
 ### 8b. Ready-prompt quality guard
 

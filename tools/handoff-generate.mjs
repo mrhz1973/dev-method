@@ -25,6 +25,7 @@ Usage:
     [--push-authorized yes|no]    \\
     [--allow-non-git-fixture]     \\
     [--require-ready]             \\
+    [--strict-format]             \\
     [--help]
 
 Flags:
@@ -38,9 +39,11 @@ Flags:
   --commit-msg         Override proposed commit message
   --push-authorized    yes | no (default: no)
   --allow-non-git-fixture  Allow --repo to be a non-git directory (test fixtures only)
-  --require-ready      Fail (exit 2) if the generated prompt still contains
-                       unresolved [TBD] / [TASK NOT RESOLVED] placeholders;
+  --require-ready      Fail (exit 2) if the prompt is not ready (placeholders,
+                       TASK STATUS: resolved, TASK STATUS: in-progress, etc.);
                        no --out file is written when not ready
+  --strict-format      Fail (exit 4) when an embedded prompt uses legacy prose
+                       without canonical structured fields; no --out written
   --help               Show this help
 
 Prompt readiness:
@@ -51,14 +54,14 @@ Prompt readiness:
   "## Generated prompt". Default behavior still prints/writes the output;
   use --require-ready to enforce a hard fail when not ready.
 
-Embedded handoff canonical fields (optional, first matching line wins):
-  TASK STATUS: pending | in-progress | resolved
-  Operation type: code-change | docs-only | record-pass | plan | fix | refactor
+Embedded handoff canonical fields (see templates/embedded-handoff.md):
+  TASK STATUS: pending | resolved  (in-progress is rejected)
+  Operation type, Target file(s), Risk level — first line wins
   Commit: authorized | not authorized
   Push: authorized | not authorized
-  Target file(s): <paths>
-  Risk level: low | medium | high
-  Structured Push/Commit fields take precedence over legacy prose detection.
+  Conflicting TASK STATUS / Commit / Push values → hard error (exit 3)
+  Structured fields take precedence over legacy prose; legacy format is deprecated
+  (planned removal dev-method v0.2.0). Output includes Embedded format metadata.
 
 Safety boundaries enforced:
   - Reads only docs/orchestrator/latest.md and inbox/*.md in the operational repo
@@ -88,6 +91,7 @@ function parseArgs(raw) {
     if (a === '--dry-run') { r.dryRun = true; continue; }
     if (a === '--allow-non-git-fixture') { r.allowNonGitFixture = true; continue; }
     if (a === '--require-ready') { r.requireReady = true; continue; }
+    if (a === '--strict-format') { r.strictFormat = true; continue; }
     if (a.startsWith('--')) {
       const key = toCamel(a.slice(2));
       const next = raw[i + 1];
@@ -309,8 +313,19 @@ function normalizeEmbeddedPrompt(prompt, implementerLabel) {
   return out;
 }
 
-// Parse canonical structured fields from an embedded handoff prompt body.
-// First matching line wins; case-insensitive field names; values trimmed.
+// Parse Commit:/Push: structured authorization values only.
+function parseAuthStructuredValue(raw) {
+  const val = raw.trim().toLowerCase();
+  if (val === 'authorized') return 'yes';
+  if (val === 'not authorized') return 'no';
+  return null;
+}
+
+function normalizeTaskStatusValue(raw) {
+  return raw.trim().toLowerCase().replace(/\s+/g, '-');
+}
+
+// Parse canonical structured fields; TASK STATUS / Commit / Push detect conflicts.
 function parseEmbeddedHandoffMetadata(prompt) {
   const meta = {
     taskStatus: null,
@@ -319,16 +334,23 @@ function parseEmbeddedHandoffMetadata(prompt) {
     pushAuthorization: null,
     targetFiles: null,
     riskLevel: null,
+    hasStructuredFields: false,
+    inProgress: false,
+    conflicts: [],
   };
   if (!prompt) return meta;
+
+  const taskStatusLines = [];
+  const commitLines = [];
+  const pushLines = [];
 
   for (const line of prompt.split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
     let m = trimmed.match(/^TASK\s+STATUS:\s*(.+)$/i);
-    if (m && !meta.taskStatus) {
-      meta.taskStatus = m[1].trim().toLowerCase().replace(/\s+/g, '-');
+    if (m) {
+      taskStatusLines.push(m[1].trim());
       continue;
     }
 
@@ -339,18 +361,16 @@ function parseEmbeddedHandoffMetadata(prompt) {
     }
 
     m = trimmed.match(/^Commit:\s*(.+)$/i);
-    if (m && !meta.commitAuthorization) {
-      const val = m[1].trim().toLowerCase();
-      if (val === 'authorized') meta.commitAuthorization = 'yes';
-      else if (val === 'not authorized') meta.commitAuthorization = 'no';
+    if (m) {
+      const auth = parseAuthStructuredValue(m[1]);
+      if (auth) commitLines.push({ raw: m[1].trim(), auth });
       continue;
     }
 
     m = trimmed.match(/^Push:\s*(.+)$/i);
-    if (m && !meta.pushAuthorization) {
-      const val = m[1].trim().toLowerCase();
-      if (val === 'authorized') meta.pushAuthorization = 'yes';
-      else if (val === 'not authorized') meta.pushAuthorization = 'no';
+    if (m) {
+      const auth = parseAuthStructuredValue(m[1]);
+      if (auth) pushLines.push({ raw: m[1].trim(), auth });
       continue;
     }
 
@@ -367,7 +387,57 @@ function parseEmbeddedHandoffMetadata(prompt) {
     }
   }
 
+  if (taskStatusLines.length) {
+    const norms = taskStatusLines.map(normalizeTaskStatusValue);
+    if (norms.some((n) => n === 'in-progress')) meta.inProgress = true;
+    const actionable = norms.filter((n) => n === 'pending' || n === 'resolved');
+    const uniqueActionable = [...new Set(actionable)];
+    if (uniqueActionable.length > 1) {
+      meta.conflicts.push({ field: 'TASK STATUS', values: taskStatusLines });
+    } else if (uniqueActionable.length === 1) {
+      meta.taskStatus = uniqueActionable[0];
+    }
+  }
+
+  if (commitLines.length) {
+    const auths = [...new Set(commitLines.map((c) => c.auth))];
+    if (auths.length > 1) {
+      meta.conflicts.push({ field: 'Commit', values: commitLines.map((c) => c.raw) });
+    } else {
+      meta.commitAuthorization = auths[0];
+    }
+  }
+
+  if (pushLines.length) {
+    const auths = [...new Set(pushLines.map((p) => p.auth))];
+    if (auths.length > 1) {
+      meta.conflicts.push({ field: 'Push', values: pushLines.map((p) => p.raw) });
+    } else {
+      meta.pushAuthorization = auths[0];
+    }
+  }
+
+  meta.hasStructuredFields = !!(
+    meta.taskStatus || meta.inProgress || meta.operationType ||
+    meta.commitAuthorization || meta.pushAuthorization ||
+    meta.targetFiles || meta.riskLevel
+  );
+
   return meta;
+}
+
+function reportStructuredConflicts(conflicts) {
+  for (const c of conflicts) {
+    const vs = c.values.join(' vs ');
+    process.stderr.write(`ERROR: conflicting structured field ${c.field}: ${vs}\n`);
+  }
+}
+
+function classifyEmbeddedFormat(hasEmbedded, embeddedMeta, prompt) {
+  if (!hasEmbedded) return 'none';
+  if (embeddedMeta?.hasStructuredFields) return 'structured';
+  if (detectLegacyPushProse(prompt)) return 'legacy';
+  return 'none';
 }
 
 function resolvePushAuthorized(embeddedMeta, prompt, cliOverride) {
@@ -416,11 +486,28 @@ function detectPromptCompleteness(prompt) {
   return { ready: reasons.length === 0, reasons };
 }
 
-// Combine placeholder detection with canonical TASK STATUS: resolved guard.
+const LEGACY_PUSH_PATTERNS = [
+  /push\s+to\s+origin\s+main\s*\([^)]*\bauthorized\b/i,
+  /push\s+origin\s+main\s+after\s+commit\s*\([^)]*\bauthorized\b/i,
+  /push\s+is\s+explicitly\s+authorized/i,
+  /push\s+authorized:\s*yes\b/i,
+  /push\s+authorized\s+yes\b/i,
+];
+
+function detectLegacyPushProse(prompt) {
+  if (!prompt) return false;
+  return LEGACY_PUSH_PATTERNS.some((p) => p.test(prompt));
+}
+
+// Combine placeholder detection with TASK STATUS guards.
 function assessPromptReadiness(prompt, embeddedMeta) {
   const base = detectPromptCompleteness(prompt);
   const reasons = [...base.reasons];
   const status = embeddedMeta?.taskStatus;
+  if (embeddedMeta?.inProgress) {
+    const msg = 'TASK STATUS: in-progress is ambiguous; use pending or resolved';
+    if (!reasons.includes(msg)) reasons.push(msg);
+  }
   if (status === 'resolved') {
     const msg = 'task status is resolved, not an actionable handoff';
     if (!reasons.includes(msg)) reasons.push(msg);
@@ -428,26 +515,35 @@ function assessPromptReadiness(prompt, embeddedMeta) {
   const ready = reasons.length === 0;
   let promptReadyLabel = 'yes';
   if (!ready) {
-    const resolvedOnly = reasons.length === 1 && reasons[0].includes('resolved');
-    if (resolvedOnly) promptReadyLabel = 'no — task status is resolved';
-    else if (status === 'resolved') promptReadyLabel = 'no — task status is resolved';
-    else promptReadyLabel = 'no — unresolved placeholders present';
+    if (embeddedMeta?.inProgress) {
+      promptReadyLabel = 'no — TASK STATUS in-progress is ambiguous';
+    } else if (status === 'resolved') {
+      promptReadyLabel = 'no — task status is resolved';
+    } else {
+      promptReadyLabel = 'no — unresolved placeholders present';
+    }
   }
   return { ready, reasons, promptReadyLabel };
 }
 
-// Detect clear push authorization in prompt text (metadata only; generator never pushes).
+// Legacy prose fallback for push (ignored when structured Push: is set).
 function detectPushAuthorizedFromPrompt(prompt) {
-  if (!prompt) return 'no';
-  const patterns = [
-    /push\s+to\s+origin\s+main\s*\([^)]*\bauthorized\b/i,
-    /push\s+origin\s+main\s+after\s+commit\s*\([^)]*\bauthorized\b/i,
-    /push\s+is\s+explicitly\s+authorized/i,
-    /push\s+authorized:\s*yes\b/i,
-    /push\s+authorized\s+yes\b/i,
-  ];
-  return patterns.some((p) => p.test(prompt)) ? 'yes' : 'no';
+  return detectLegacyPushProse(prompt) ? 'yes' : 'no';
 }
+
+const LEGACY_FORMAT_WARNING = `## WARNING — legacy embedded format
+
+WARNING:
+Legacy embedded format detected.
+Migrate to structured fields:
+TASK STATUS: pending|resolved
+Commit: authorized|not authorized
+Push: authorized|not authorized
+Legacy parsing is deprecated and planned for removal in dev-method v0.2.0.
+
+---
+
+`;
 
 function discover(content) {
   return {
@@ -542,7 +638,7 @@ function buildOutput(meta, prompt, opts) {
     ? '- Review the embedded handoff prompt below before pasting into any IDE agent session.'
     : '- Fill in all [TBD] and [TASK NOT RESOLVED] placeholders before use.';
 
-  const warningBlock = readiness.ready
+  const notReadyBlock = readiness.ready
     ? ''
     : `\n## WARNING — prompt not ready
 
@@ -557,6 +653,9 @@ ${readiness.reasons.map((r) => `- ${r}`).join('\n')}
 
 `;
 
+  const legacyBlock = meta.embeddedFormat === 'legacy' ? `\n${LEGACY_FORMAT_WARNING}` : '';
+  const warningBlock = `${legacyBlock}${notReadyBlock}`;
+
   return `# Handoff prompt — generated ${ts}
 
 Operational repo:   ${meta.repoName}
@@ -569,6 +668,7 @@ Method path:        ${meta.methodPath}
 Implementer:        ${meta.implementer}
 Discovery docs:     ${meta.discoveryDocs.join(', ') || '[none]'}
 Prompt source:      ${meta.promptSource}
+Embedded format:    ${meta.embeddedFormat || 'none'}
 Prompt ready:       ${promptReadyLine}
 Task status:        ${metaDisplay(canon.taskStatus)}
 Operation type:     ${metaDisplay(canon.operationType)}
@@ -700,10 +800,22 @@ function main() {
   let prompt;
   let promptSource;
   let embeddedMeta = null;
+  let embeddedFormat = 'none';
 
   if (embeddedPrompt) {
     const implementerLabel = IMPLEMENTER_LABELS[args.implementer];
     embeddedMeta = parseEmbeddedHandoffMetadata(embeddedPrompt);
+    if (embeddedMeta.conflicts.length) {
+      reportStructuredConflicts(embeddedMeta.conflicts);
+      process.stderr.write('No --out file was written. Fix conflicting structured fields and retry.\n');
+      exit(3);
+    }
+    embeddedFormat = classifyEmbeddedFormat(true, embeddedMeta, embeddedPrompt);
+    if (args.strictFormat && embeddedFormat === 'legacy') {
+      process.stderr.write('ERROR: --strict-format: legacy embedded format detected.\n');
+      process.stderr.write('No --out file was written. Migrate to structured fields (see templates/embedded-handoff.md).\n');
+      exit(4);
+    }
     prompt = normalizeEmbeddedPrompt(embeddedPrompt, implementerLabel);
     promptSource = 'embedded inbox handoff prompt';
     pushAuthorized = resolvePushAuthorized(embeddedMeta, prompt, args.pushAuthorized);
@@ -753,7 +865,7 @@ function main() {
       repoName, repoPath, gitRoot, branch, gitStatus, latestCommit, methodPath,
       implementer: IMPLEMENTER_LABELS[args.implementer],
       discoveryDocs, pushAuthorized, commitAuthorized, promptSource, readiness,
-      embeddedMeta: embeddedMeta || {},
+      embeddedMeta: embeddedMeta || {}, embeddedFormat,
     },
     prompt,
     { mode, dryRun: !!args.dryRun, outPath: writeTarget }
