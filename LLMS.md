@@ -29,6 +29,7 @@ Do not read everything by default. Use the reading order and conditional section
 | Checking gate policy | `core/06-gates-and-decision-packets.md` |
 | Reviewing a historical advanced case | `examples/alina-lavoro.md` |
 | Working on GIS Tool | `examples/gis-tool.md` |
+| Planning post-v0.1.0 work, stabilization, pilot adoption, template expansion, or future automation | `ROADMAP.md` |
 | Reviewing the target physical setup | `examples/martino-target-setup.md` |
 
 ## Do not read by default
