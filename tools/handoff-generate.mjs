@@ -223,6 +223,40 @@ function extractBlock(content, patterns) {
   return null;
 }
 
+// Headings that may introduce a copy-paste-ready handoff prompt in an inbox file.
+const EMBEDDED_PROMPT_HEADING_PAT =
+  /future\s+handoff\s+prompt|handoff\s+prompt|copy-paste\s+ready/i;
+
+// Return the first non-empty fenced code block after `fromIndex` (exclusive scan start).
+function extractFencedBlockAfter(lines, fromIndex) {
+  for (let i = fromIndex; i < lines.length; i++) {
+    if (!/^```/.test(lines[i])) continue;
+    const inner = [];
+    i++;
+    while (i < lines.length && !/^```\s*$/.test(lines[i])) {
+      inner.push(lines[i]);
+      i++;
+    }
+    const body = inner.join('\n').trim();
+    if (body) return body;
+  }
+  return null;
+}
+
+// Extract embedded handoff prompt from inbox markdown (first matching section wins).
+function extractEmbeddedHandoffPrompt(inboxContent) {
+  if (!inboxContent) return null;
+  const lines = inboxContent.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!/^#{1,6}\s/.test(line)) continue;
+    if (!EMBEDDED_PROMPT_HEADING_PAT.test(line)) continue;
+    const block = extractFencedBlockAfter(lines, i + 1);
+    if (block) return block;
+  }
+  return null;
+}
+
 function discover(content) {
   return {
     nextPass: extractLine(content, [
@@ -314,6 +348,10 @@ function fillTemplate(tpl, vals) {
 function buildOutput(meta, prompt, opts) {
   const ts = new Date().toISOString();
   const statusStr = (meta.gitStatus || '').trim().replace(/\n/g, '; ') || 'clean';
+  const embedded = meta.promptSource === 'embedded inbox handoff prompt';
+  const reviewNote = embedded
+    ? '- Review the embedded handoff prompt below before pasting into any IDE agent session.'
+    : '- Fill in all [TBD] and [TASK NOT RESOLVED] placeholders before use.';
 
   return `# Handoff prompt — generated ${ts}
 
@@ -326,6 +364,7 @@ Latest commit:      ${meta.latestCommit || '[not resolved]'}
 Method path:        ${meta.methodPath}
 Implementer:        ${meta.implementer}
 Discovery docs:     ${meta.discoveryDocs.join(', ') || '[none]'}
+Prompt source:      ${meta.promptSource}
 Output mode:        ${opts.mode}
 Push authorized:    ${meta.pushAuthorized}
 Human review:       REQUIRED${opts.dryRun ? '\nDry-run mode:       YES — no execution was performed' : ''}
@@ -339,7 +378,7 @@ This file is generated. Review before pasting into any IDE agent session.
 - The generator did NOT execute any implementation.
 - The generator did NOT commit, push, deploy, tag, or release anything.
 - The generator did NOT launch any implementer (Windsurf, Cursor, Claude Code, etc.).
-- Fill in all [TBD] and [TASK NOT RESOLVED] placeholders before use.
+${reviewNote}
 
 ---
 
@@ -413,6 +452,7 @@ function main() {
   let commitMsg = args.commitMsg || null;
   let pushAuthorized = args.pushAuthorized || 'no';
   let inboxRecord = null;
+  let embeddedPrompt = null;
 
   const latestContent = safeRead(join(repoPath, 'docs', 'orchestrator', 'latest.md'));
 
@@ -431,6 +471,7 @@ function main() {
       inboxRecord = `docs/orchestrator/inbox/${inbox.name}`;
       const inboxContent = safeRead(inbox.path);
       if (inboxContent) {
+        embeddedPrompt = extractEmbeddedHandoffPrompt(inboxContent);
         const di = discover(inboxContent);
         if (!nextPass) nextPass = di.nextPass;
         if (!allowedFiles) allowedFiles = di.allowedFiles;
@@ -446,23 +487,32 @@ function main() {
   const PLACEHOLDER = '[TASK NOT RESOLVED — human must fill in]';
   const TBD = '[TBD — human must fill in]';
 
-  let tpl;
-  try { tpl = loadTemplate(methodPath); }
-  catch (e) { process.stderr.write(`ERROR: ${e.message}\n`); exit(1); }
+  let prompt;
+  let promptSource;
 
-  const prompt = fillTemplate(tpl, {
-    repoName,
-    repoPath,
-    methodPath,
-    discoveryDocs: discoveryDocs.join(', ') || '[none]',
-    nextPass: nextPass || PLACEHOLDER,
-    allowedFiles: inline(allowedFiles, TBD),
-    forbiddenFiles: inline(forbiddenFiles, TBD),
-    commitMsg: commitMsg || TBD,
-    inboxRecord: inboxRecord || '[inbox record — if applicable]',
-    implementerLabel: IMPLEMENTER_LABELS[args.implementer],
-    pushAuthorized,
-  });
+  if (embeddedPrompt) {
+    prompt = embeddedPrompt;
+    promptSource = 'embedded inbox handoff prompt';
+  } else {
+    let tpl;
+    try { tpl = loadTemplate(methodPath); }
+    catch (e) { process.stderr.write(`ERROR: ${e.message}\n`); exit(1); }
+
+    prompt = fillTemplate(tpl, {
+      repoName,
+      repoPath,
+      methodPath,
+      discoveryDocs: discoveryDocs.join(', ') || '[none]',
+      nextPass: nextPass || PLACEHOLDER,
+      allowedFiles: inline(allowedFiles, TBD),
+      forbiddenFiles: inline(forbiddenFiles, TBD),
+      commitMsg: commitMsg || TBD,
+      inboxRecord: inboxRecord || '[inbox record — if applicable]',
+      implementerLabel: IMPLEMENTER_LABELS[args.implementer],
+      pushAuthorized,
+    });
+    promptSource = 'dev-method template skeleton';
+  }
 
   const writeTarget = (!args.dryRun && args.out) ? args.out : null;
   const mode = args.out
@@ -473,7 +523,7 @@ function main() {
     {
       repoName, repoPath, gitRoot, branch, gitStatus, latestCommit, methodPath,
       implementer: IMPLEMENTER_LABELS[args.implementer],
-      discoveryDocs, pushAuthorized,
+      discoveryDocs, pushAuthorized, promptSource,
     },
     prompt,
     { mode, dryRun: !!args.dryRun, outPath: writeTarget }
