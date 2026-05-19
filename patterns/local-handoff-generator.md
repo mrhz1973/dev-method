@@ -236,12 +236,27 @@ Future dry-run test using GIS Tool:
 | Expected output | `docs/orchestrator/handoff/current.md` written inside the operational repo |
 | Pass condition | Prompt generated; no code executed; no commit/push; no runtime actions; output contains all safety guards; human review notice present |
 
+### 8a. Canonical embedded handoff fields
+
+Embedded inbox prompts may include structured lines near the top (first matching line wins). See `templates/embedded-handoff.md` for the full reference.
+
+| Field | Purpose |
+|-------|---------|
+| `TASK STATUS:` | `pending` \| `in-progress` \| `resolved` — `resolved` marks the handoff not ready |
+| `Operation type:` | `code-change` \| `docs-only` \| `record-pass` \| `plan` \| `fix` \| `refactor` |
+| `Commit:` | `authorized` \| `not authorized` — metadata only; generator never commits |
+| `Push:` | `authorized` \| `not authorized` — takes precedence over legacy prose detection |
+| `Target file(s):` | explicit paths or `docs-only` |
+| `Risk level:` | `low` \| `medium` \| `high` |
+
+Generated output reports these as metadata lines. Legacy embedded prompts without canonical fields continue to work; push authorization still falls back to prose patterns when `Push:` is absent.
+
 ### 8b. Ready-prompt quality guard
 
 The v1 script must distinguish a ready actionable handoff from an incomplete skeleton that still needs human completion.
 
-- **Detection** — a simple deterministic helper inspects the assembled prompt for unresolved markers: `[TBD`, `[TASK NOT RESOLVED`, `human must fill in`, `TASK: [short title]`, `Current task: [one-line description]`, `Allowed scope: [TBD`, `Commit: [TBD`.
-- **Metadata** — output always includes a `Prompt ready: yes` or `Prompt ready: no — unresolved placeholders present` line in the header.
+- **Detection** — inspects the assembled prompt for unresolved markers (`[TBD`, `[TASK NOT RESOLVED`, template skeleton markers) and for `TASK STATUS: resolved` (not an actionable implementation handoff).
+- **Metadata** — output always includes a `Prompt ready: yes` or `Prompt ready: no — …` line in the header (`unresolved placeholders present` or `task status is resolved`).
 - **Warning block** — when the prompt is not ready, a `## WARNING — prompt not ready` section is inserted before `## Generated prompt`, listing the reasons.
 - **`--require-ready` flag** — optional. When set and the prompt is not ready: the script writes a clear stderr error listing the unresolved markers, exits non-zero (code `2`), and does not write `--out`.
 - **Default behavior** — when `--require-ready` is not used, the script still prints / writes the output even if the prompt is not ready; the embedded `Prompt ready: no` line and WARNING block make the state explicit.
@@ -259,6 +274,7 @@ The v1 script must distinguish a ready actionable handoff from an incomplete ske
 ## Related
 
 - `templates/ide-agent-handoff-task.md` — the prompt skeleton the generator fills.
+- `templates/embedded-handoff.md` — canonical fields for embedded inbox handoff prompts.
 - `prompts/implementer-standard.md` — all implementer rules referenced by the generated prompt.
 - `patterns/qa-pass-implementer-handoff.md` — the PASS → handoff flow this generator supports.
 - `ROADMAP.md` § Future automation track — where local handoff generator fits in the larger plan.

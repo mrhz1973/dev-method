@@ -47,9 +47,18 @@ Prompt readiness:
   Every output includes a "Prompt ready: yes|no" metadata line. When the
   prompt still contains unresolved placeholders (e.g. [TBD ...],
   [TASK NOT RESOLVED ...], "human must fill in", or template skeleton
-  markers), a WARNING block is inserted before "## Generated prompt".
-  Default behavior still prints/writes the output; use --require-ready to
-  enforce a hard fail when not ready.
+  markers), or TASK STATUS: resolved, a WARNING block is inserted before
+  "## Generated prompt". Default behavior still prints/writes the output;
+  use --require-ready to enforce a hard fail when not ready.
+
+Embedded handoff canonical fields (optional, first matching line wins):
+  TASK STATUS: pending | in-progress | resolved
+  Operation type: code-change | docs-only | record-pass | plan | fix | refactor
+  Commit: authorized | not authorized
+  Push: authorized | not authorized
+  Target file(s): <paths>
+  Risk level: low | medium | high
+  Structured Push/Commit fields take precedence over legacy prose detection.
 
 Safety boundaries enforced:
   - Reads only docs/orchestrator/latest.md and inbox/*.md in the operational repo
@@ -300,6 +309,86 @@ function normalizeEmbeddedPrompt(prompt, implementerLabel) {
   return out;
 }
 
+// Parse canonical structured fields from an embedded handoff prompt body.
+// First matching line wins; case-insensitive field names; values trimmed.
+function parseEmbeddedHandoffMetadata(prompt) {
+  const meta = {
+    taskStatus: null,
+    operationType: null,
+    commitAuthorization: null,
+    pushAuthorization: null,
+    targetFiles: null,
+    riskLevel: null,
+  };
+  if (!prompt) return meta;
+
+  for (const line of prompt.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    let m = trimmed.match(/^TASK\s+STATUS:\s*(.+)$/i);
+    if (m && !meta.taskStatus) {
+      meta.taskStatus = m[1].trim().toLowerCase().replace(/\s+/g, '-');
+      continue;
+    }
+
+    m = trimmed.match(/^Operation\s+type:\s*(.+)$/i);
+    if (m && !meta.operationType) {
+      meta.operationType = m[1].trim();
+      continue;
+    }
+
+    m = trimmed.match(/^Commit:\s*(.+)$/i);
+    if (m && !meta.commitAuthorization) {
+      const val = m[1].trim().toLowerCase();
+      if (val === 'authorized') meta.commitAuthorization = 'yes';
+      else if (val === 'not authorized') meta.commitAuthorization = 'no';
+      continue;
+    }
+
+    m = trimmed.match(/^Push:\s*(.+)$/i);
+    if (m && !meta.pushAuthorization) {
+      const val = m[1].trim().toLowerCase();
+      if (val === 'authorized') meta.pushAuthorization = 'yes';
+      else if (val === 'not authorized') meta.pushAuthorization = 'no';
+      continue;
+    }
+
+    m = trimmed.match(/^Target\s+file(?:\(s\))?:\s*(.+)$/i);
+    if (m && !meta.targetFiles) {
+      meta.targetFiles = m[1].trim();
+      continue;
+    }
+
+    m = trimmed.match(/^Risk\s+level:\s*(.+)$/i);
+    if (m && !meta.riskLevel) {
+      meta.riskLevel = m[1].trim().toLowerCase();
+      continue;
+    }
+  }
+
+  return meta;
+}
+
+function resolvePushAuthorized(embeddedMeta, prompt, cliOverride) {
+  if (cliOverride === 'yes') return 'yes';
+  if (embeddedMeta?.pushAuthorization === 'yes' || embeddedMeta?.pushAuthorization === 'no') {
+    return embeddedMeta.pushAuthorization;
+  }
+  return detectPushAuthorizedFromPrompt(prompt);
+}
+
+function resolveCommitAuthorized(embeddedMeta) {
+  if (embeddedMeta?.commitAuthorization === 'yes' || embeddedMeta?.commitAuthorization === 'no') {
+    return embeddedMeta.commitAuthorization;
+  }
+  return 'no';
+}
+
+function metaDisplay(value, fallback = '[not specified]') {
+  return value && String(value).trim() ? String(value).trim() : fallback;
+}
+
 // Detect unresolved placeholders / "fill in" markers in an assembled prompt.
 // Returns { ready: boolean, reasons: string[] } where `reasons` is the
 // deduplicated list of human-readable markers found in the prompt body.
@@ -325,6 +414,26 @@ function detectPromptCompleteness(prompt) {
     }
   }
   return { ready: reasons.length === 0, reasons };
+}
+
+// Combine placeholder detection with canonical TASK STATUS: resolved guard.
+function assessPromptReadiness(prompt, embeddedMeta) {
+  const base = detectPromptCompleteness(prompt);
+  const reasons = [...base.reasons];
+  const status = embeddedMeta?.taskStatus;
+  if (status === 'resolved') {
+    const msg = 'task status is resolved, not an actionable handoff';
+    if (!reasons.includes(msg)) reasons.push(msg);
+  }
+  const ready = reasons.length === 0;
+  let promptReadyLabel = 'yes';
+  if (!ready) {
+    const resolvedOnly = reasons.length === 1 && reasons[0].includes('resolved');
+    if (resolvedOnly) promptReadyLabel = 'no — task status is resolved';
+    else if (status === 'resolved') promptReadyLabel = 'no — task status is resolved';
+    else promptReadyLabel = 'no — unresolved placeholders present';
+  }
+  return { ready, reasons, promptReadyLabel };
 }
 
 // Detect clear push authorization in prompt text (metadata only; generator never pushes).
@@ -426,10 +535,9 @@ function buildOutput(meta, prompt, opts) {
   const ts = new Date().toISOString();
   const statusStr = (meta.gitStatus || '').trim().replace(/\n/g, '; ') || 'clean';
   const embedded = meta.promptSource === 'embedded inbox handoff prompt';
-  const readiness = meta.readiness || { ready: true, reasons: [] };
-  const promptReadyLine = readiness.ready
-    ? 'yes'
-    : 'no — unresolved placeholders present';
+  const readiness = meta.readiness || { ready: true, reasons: [], promptReadyLabel: 'yes' };
+  const promptReadyLine = readiness.promptReadyLabel || (readiness.ready ? 'yes' : 'no — unresolved placeholders present');
+  const canon = meta.embeddedMeta || {};
   const reviewNote = embedded
     ? '- Review the embedded handoff prompt below before pasting into any IDE agent session.'
     : '- Fill in all [TBD] and [TASK NOT RESOLVED] placeholders before use.';
@@ -440,7 +548,7 @@ function buildOutput(meta, prompt, opts) {
 
 WARNING:
 This generated prompt is NOT ready to paste into an implementer.
-It contains unresolved placeholders and requires human completion.
+Review the reasons below before use.
 
 Reasons:
 ${readiness.reasons.map((r) => `- ${r}`).join('\n')}
@@ -462,8 +570,13 @@ Implementer:        ${meta.implementer}
 Discovery docs:     ${meta.discoveryDocs.join(', ') || '[none]'}
 Prompt source:      ${meta.promptSource}
 Prompt ready:       ${promptReadyLine}
-Output mode:        ${opts.mode}
+Task status:        ${metaDisplay(canon.taskStatus)}
+Operation type:     ${metaDisplay(canon.operationType)}
+Risk level:         ${metaDisplay(canon.riskLevel)}
+Target files:       ${metaDisplay(canon.targetFiles)}
+Commit authorized:  ${meta.commitAuthorized}
 Push authorized:    ${meta.pushAuthorized}
+Output mode:        ${opts.mode}
 Human review:       REQUIRED${opts.dryRun ? '\nDry-run mode:       YES — no execution was performed' : ''}
 
 ---
@@ -586,14 +699,14 @@ function main() {
 
   let prompt;
   let promptSource;
+  let embeddedMeta = null;
 
   if (embeddedPrompt) {
     const implementerLabel = IMPLEMENTER_LABELS[args.implementer];
+    embeddedMeta = parseEmbeddedHandoffMetadata(embeddedPrompt);
     prompt = normalizeEmbeddedPrompt(embeddedPrompt, implementerLabel);
     promptSource = 'embedded inbox handoff prompt';
-    if (args.pushAuthorized !== 'yes') {
-      pushAuthorized = detectPushAuthorizedFromPrompt(prompt);
-    }
+    pushAuthorized = resolvePushAuthorized(embeddedMeta, prompt, args.pushAuthorized);
   } else {
     let tpl;
     try { tpl = loadTemplate(methodPath); }
@@ -615,15 +728,18 @@ function main() {
     promptSource = 'dev-method template skeleton';
   }
 
-  const readiness = detectPromptCompleteness(prompt);
+  const commitAuthorized = embeddedMeta
+    ? resolveCommitAuthorized(embeddedMeta)
+    : 'no';
+  const readiness = assessPromptReadiness(prompt, embeddedMeta);
 
   if (args.requireReady && !readiness.ready) {
     process.stderr.write('ERROR: --require-ready: generated prompt is NOT ready to paste into an implementer.\n');
-    process.stderr.write('Unresolved placeholders detected:\n');
+    process.stderr.write('Prompt not ready:\n');
     for (const reason of readiness.reasons) {
       process.stderr.write(`  - ${reason}\n`);
     }
-    process.stderr.write('No --out file was written. Resolve placeholders (e.g. embed a complete handoff prompt in the selected inbox file) and retry.\n');
+    process.stderr.write('No --out file was written. Embed a complete actionable handoff prompt in the selected inbox file and retry.\n');
     exit(2);
   }
 
@@ -636,7 +752,8 @@ function main() {
     {
       repoName, repoPath, gitRoot, branch, gitStatus, latestCommit, methodPath,
       implementer: IMPLEMENTER_LABELS[args.implementer],
-      discoveryDocs, pushAuthorized, promptSource, readiness,
+      discoveryDocs, pushAuthorized, commitAuthorized, promptSource, readiness,
+      embeddedMeta: embeddedMeta || {},
     },
     prompt,
     { mode, dryRun: !!args.dryRun, outPath: writeTarget }
@@ -646,7 +763,7 @@ function main() {
     writeFileSync(writeTarget, output, 'utf8');
     console.log(`Handoff prompt written to: ${writeTarget}`);
     if (!readiness.ready) {
-      console.log('WARNING: written file is marked "Prompt ready: no" — unresolved placeholders present.');
+      console.log(`WARNING: written file is marked "Prompt ready: ${readiness.promptReadyLabel}".`);
     }
     console.log('HUMAN REVIEW REQUIRED before paste / execute.');
   } else {
