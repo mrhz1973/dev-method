@@ -70,6 +70,7 @@ Potential future work:
 - Branch cleanup automation.
 - Human-gate notifications.
 - Optional OpenClaw `/codex-consult` bridge.
+- Validate QA PASS → implementer handoff first manually, then automate only behind gates.
 
 Constraints:
 - Automation must remain optional.

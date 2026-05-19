@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added QA PASS → implementer handoff pattern.
+
 ## [0.1.1] — 2026-05-19
 
 ### Added

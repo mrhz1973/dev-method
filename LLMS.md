@@ -32,6 +32,7 @@ Do not read everything by default. Use the reading order and conditional section
 | Multiple repos, sessions, or workstations are active | `patterns/session-and-repo-guard.md` |
 | Context was compacted mid-debug or resuming a DEBUG task after compaction | `patterns/context-compaction-debug-reconstruction.md` |
 | Handling user ideas, bugs, or feature requests found during app usage | `patterns/idea-intake-during-use.md` |
+| Defining what happens after user confirms a manual test PASS | `patterns/qa-pass-implementer-handoff.md` |
 | Planning post-v0.1.0 work, stabilization, pilot adoption, template expansion, or future automation | `ROADMAP.md` |
 | Reviewing the target physical setup | `examples/martino-target-setup.md` |
 
