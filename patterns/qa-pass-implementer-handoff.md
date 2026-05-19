@@ -76,6 +76,18 @@ When implemented with n8n / OpenClaw / runner:
 - never bypasses gates;
 - when a generated prompt authorizes commit and push, the implementer follows the commit-and-push rules in `prompts/implementer-standard.md` — automation does not grant deploy, tag, or release permission.
 
+## PASS + follow-up UX request
+
+When the user confirms a PASS but in the same message reports a small UX improvement or bug discovered during testing:
+
+1. **Record the PASS first** — do not mix the PASS record with the follow-up request.
+2. **Combine in one task only if all are true:** same repo; same feature area or immediately adjacent UX flow; small scoped change; no runtime deploy / tag / release / secret / gate; allowed files are explicit; QA checklist covers both.
+3. **If any condition fails:** record the request as a separate next recommended task — do not mix it into the PASS record.
+4. The implementer must not treat a UX note as permission to start a large refactor.
+5. Completion still requires Git/GitHub evidence. See the completion evidence rule in `prompts/implementer-standard.md`.
+
+For general idea triage during live app usage, see `patterns/idea-intake-during-use.md`.
+
 ## Completion evidence note
 
 A handoff is complete only when GitHub-visible evidence exists: commit hash and push result. Descriptive IDE completion messages — including "feedback submitted" or "implementation done" — are not sufficient. See the completion evidence rule in `prompts/implementer-standard.md`.

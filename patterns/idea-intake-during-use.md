@@ -40,6 +40,7 @@ Idea while using app
 - During QA: log new ideas unless they directly block the QA result. Do not open unrelated work.
 - During milestone closure: avoid starting unrelated work. Capture and defer.
 - When the user says **"nota questa modifica: …"** the orchestrator classifies it and routes it without interrupting the active task unless the classification is blocking or `RISK/GATE`.
+- During PASS confirmation: if the user reports a follow-up UX request in the same message, apply the PASS + follow-up UX request rule in `patterns/qa-pass-implementer-handoff.md` before deciding whether to combine or defer.
 
 ## Principle
 

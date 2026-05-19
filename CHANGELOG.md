@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added PASS + follow-up UX request rule to `patterns/qa-pass-implementer-handoff.md`; added pointer in `patterns/idea-intake-during-use.md`.
 - Added completion evidence rule to `prompts/implementer-standard.md`; updated final report requirements in `templates/ide-agent-handoff-task.md`; added completion evidence note in `patterns/qa-pass-implementer-handoff.md`.
 - Consistency audit: clarified push-authorization conditionality in `templates/ide-agent-handoff-task.md`; added IDE-agent template pointer in `LLMS.md` read-when-relevant table.
 - Added `templates/ide-agent-handoff-task.md`: compact copy-paste template for IDE agent (Windsurf/Cascade) handoff prompts; added IDE-agent pointer in `patterns/qa-pass-implementer-handoff.md`.
