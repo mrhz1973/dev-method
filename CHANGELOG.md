@@ -7,6 +7,7 @@
 - Added large single-file / token-efficiency policy to `adapters/single-file-html.md`.
 - Added session/repo guard pattern for multi-session implementer workflows.
 - Added idea intake during use pattern for routing live feedback without derailing active work.
+- Integrated session/repo guard and idea-intake patterns into standard prompts and task templates.
 
 ## [0.1.0] — 2026-05-19
 

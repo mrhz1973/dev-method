@@ -4,6 +4,19 @@ _Use this template for tasks that only create or modify documentation, configura
 
 ---
 
+## Session / repo guard
+
+```
+SESSION / REPO GUARD:
+- Repo:
+- Local path:
+- Current task:
+- Allowed scope:
+- Do not use:
+```
+
+---
+
 ## Routing
 
 - **Mode:** CODE

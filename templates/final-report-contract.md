@@ -42,6 +42,16 @@ _[clean | dirty — if dirty, list uncommitted files and reason]_
 
 ---
 
+## Session / repo used
+
+- **Repo:**
+- **Local path:**
+- **Branch:**
+- **Scope respected:** yes / no
+- **Other active repos not touched:** yes / no
+
+---
+
 ## Routing used
 
 - **Mode:** PLAN / CODE / DEBUG

@@ -4,6 +4,21 @@ _Use this template for tasks that include at least one non-recoverable or high-r
 
 ---
 
+## Session / repo guard
+
+```
+SESSION / REPO GUARD:
+- Repo:
+- Local path:
+- Current task:
+- Allowed scope:
+- Do not use:
+```
+
+Runtime/gated tasks must not proceed if repo, path, or scope is ambiguous.
+
+---
+
 ## Routing
 
 - **Mode:** CODE / DEBUG

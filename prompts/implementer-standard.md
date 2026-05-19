@@ -47,6 +47,25 @@ DEBUG mode must first inspect evidence, reproduce or isolate the issue when poss
 
 ---
 
+## Required session / repo guard
+
+Every implementer prompt must include:
+
+```
+SESSION / REPO GUARD:
+- Repo:
+- Local path:
+- Current task:
+- Allowed scope:
+- Do not use:
+```
+
+If repo, path, or scope is ambiguous, stop and ask the orchestrator. Do not guess.
+
+If the user reports an idea, bug, or UX note during live usage, do not implement it unless the orchestrator explicitly classifies it as blocking or routes it into the current task. See `patterns/idea-intake-during-use.md`.
+
+---
+
 ## Common contract (all implementers)
 
 ### Preflight

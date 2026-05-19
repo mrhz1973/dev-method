@@ -45,6 +45,36 @@ If any routing field is missing, the implementer must stop and ask.
 
 ---
 
+## Session / repo guard
+
+When multiple repos, workstations, or implementer sessions are active, the orchestrator must declare for every work block:
+
+```
+SESSION / REPO GUARD:
+- Repo:          <repo-name>
+- Local path:    <absolute local path>
+- Current task:  <task title or ID>
+- Allowed scope: <files or dirs in scope>
+- Do not use:    <other open repos or sessions>
+```
+
+Refresh aliases route to the correct repo:
+- `aggio dev` — check dev-method only
+- `aggio gis` — check GIS Tool only
+- `aggio` — check all declared active repos
+
+See `patterns/session-and-repo-guard.md` for full rules.
+
+---
+
+## Idea intake during use
+
+When the user discovers bugs, UX friction, or feature requests while using the app, the orchestrator captures and classifies them (BUG / UX / FEATURE / RISK-GATE / IDEA). Immediate action only for blocking bugs or gated items. Everything else goes to issue, next batch, or roadmap.
+
+See `patterns/idea-intake-during-use.md` for classification and routing table.
+
+---
+
 ## Session protocol aliases
 
 | Alias | Meaning |

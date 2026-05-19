@@ -39,7 +39,7 @@ Pilot objectives:
 - Gate irreversible/high-risk actions.
 - Manual-test only at milestones.
 - Validate large-file token-efficiency policy during adoption before considering any split/refactor pattern.
-- Validate session/repo guard and idea-intake patterns during GIS Tool adoption.
+- Validate session/repo guard and idea-intake patterns (including prompt/template integration) during GIS Tool adoption.
 
 ## v0.2.0 — Template Pack Expansion
 
