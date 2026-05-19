@@ -2,14 +2,20 @@
 
 ## [Unreleased]
 
-- Added `ROADMAP.md` to track stabilization, first pilot adoption, template expansion, automation track, and release policy.
+## [0.1.1] — 2026-05-19
+
+### Added
+- Added `ROADMAP.md`.
+- Added large single-file / token-efficiency policy.
+- Added session/repo guard pattern.
+- Added idea intake during use pattern.
+- Added context compaction / debug reconstruction pattern.
+
+### Changed
 - Added roadmap pointers to `README.md` and `LLMS.md`.
-- Added large single-file / token-efficiency policy to `adapters/single-file-html.md`.
-- Added session/repo guard pattern for multi-session implementer workflows.
-- Added idea intake during use pattern for routing live feedback without derailing active work.
-- Integrated session/repo guard and idea-intake patterns into standard prompts and task templates.
-- Added context compaction / debug reconstruction policy for DEBUG mode mid-session compaction.
+- Integrated session/repo guard and idea intake patterns into standard prompts and task templates.
 - Integrated large-file token-efficiency policy into implementer prompt and task templates.
+- Updated roadmap notes for GIS Tool adoption validation.
 
 ## [0.1.0] — 2026-05-19
 

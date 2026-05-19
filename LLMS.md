@@ -41,6 +41,10 @@ Do not read everything by default. Use the reading order and conditional section
 - All `templates/` files unless you are filling in a template.
 - All `patterns/` files unless the current task involves that pattern.
 
+## Release pinning
+
+Stable consumers should pin to tags (e.g. `v0.1.0`), not `main`. `main` may contain release-candidate changes before the next tag.
+
 ## Manual routing (before Ollama is active)
 
 Until Ollama or another automatic classifier/router is active, the **orchestrator must manually choose** mode, implementer, model, effort, and reason for each task.

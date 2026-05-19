@@ -29,6 +29,11 @@ The method supports four autonomy levels (Level 0–3), allowing a project to st
 
 **GIS Tool** is the first real pilot project using dev-method at Level 2.5 / Level 3-track.
 
+## Current stable release
+
+- `v0.1.0` is the initial stable baseline.
+- `v0.1.1` is the next patch release candidate on `main` until tagged.
+
 ## Roadmap
 
 See [`ROADMAP.md`](./ROADMAP.md) for planned stabilization, first pilot adoption, and future template/automation tracks.

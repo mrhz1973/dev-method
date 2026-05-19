@@ -11,6 +11,9 @@
 Purpose:
 Small documentation-only improvements discovered while importing dev-method into real projects.
 
+Note:
+`v0.1.1` is the stabilization patch candidate collecting policies discovered during first GIS Tool adoption (roadmap, large-file token policy, session/repo guard, idea intake, context compaction / debug reconstruction).
+
 Allowed examples:
 - Clarify unclear wording found during first project imports.
 - Improve `docs/METHOD.md` overlay guidance.
