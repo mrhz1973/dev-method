@@ -24,6 +24,7 @@ Usage:
     [--commit-msg "<override>"]   \\
     [--push-authorized yes|no]    \\
     [--allow-non-git-fixture]     \\
+    [--require-ready]             \\
     [--help]
 
 Flags:
@@ -37,7 +38,18 @@ Flags:
   --commit-msg         Override proposed commit message
   --push-authorized    yes | no (default: no)
   --allow-non-git-fixture  Allow --repo to be a non-git directory (test fixtures only)
+  --require-ready      Fail (exit 2) if the generated prompt still contains
+                       unresolved [TBD] / [TASK NOT RESOLVED] placeholders;
+                       no --out file is written when not ready
   --help               Show this help
+
+Prompt readiness:
+  Every output includes a "Prompt ready: yes|no" metadata line. When the
+  prompt still contains unresolved placeholders (e.g. [TBD ...],
+  [TASK NOT RESOLVED ...], "human must fill in", or template skeleton
+  markers), a WARNING block is inserted before "## Generated prompt".
+  Default behavior still prints/writes the output; use --require-ready to
+  enforce a hard fail when not ready.
 
 Safety boundaries enforced:
   - Reads only docs/orchestrator/latest.md and inbox/*.md in the operational repo
@@ -66,6 +78,7 @@ function parseArgs(raw) {
     if (a === '--stdout') { r.stdout = true; continue; }
     if (a === '--dry-run') { r.dryRun = true; continue; }
     if (a === '--allow-non-git-fixture') { r.allowNonGitFixture = true; continue; }
+    if (a === '--require-ready') { r.requireReady = true; continue; }
     if (a.startsWith('--')) {
       const key = toCamel(a.slice(2));
       const next = raw[i + 1];
@@ -287,6 +300,33 @@ function normalizeEmbeddedPrompt(prompt, implementerLabel) {
   return out;
 }
 
+// Detect unresolved placeholders / "fill in" markers in an assembled prompt.
+// Returns { ready: boolean, reasons: string[] } where `reasons` is the
+// deduplicated list of human-readable markers found in the prompt body.
+function detectPromptCompleteness(prompt) {
+  if (!prompt || !prompt.trim()) {
+    return { ready: false, reasons: ['empty prompt'] };
+  }
+  const checks = [
+    { pat: /\[TBD\b/i, reason: '[TBD ...] placeholder present' },
+    { pat: /\[TASK NOT RESOLVED\b/i, reason: '[TASK NOT RESOLVED ...] placeholder present' },
+    { pat: /human must fill in/i, reason: '"human must fill in" marker present' },
+    { pat: /TASK:\s*\[short title\]/i, reason: 'unresolved "TASK: [short title]"' },
+    { pat: /Current task:\s*\[one-line description\]/i, reason: 'unresolved "Current task: [one-line description]"' },
+    { pat: /Allowed scope:\s*\[TBD/i, reason: 'unresolved "Allowed scope: [TBD ...]"' },
+    { pat: /Commit:\s*\[TBD/i, reason: 'unresolved "Commit: [TBD ...]"' },
+  ];
+  const seen = new Set();
+  const reasons = [];
+  for (const { pat, reason } of checks) {
+    if (pat.test(prompt) && !seen.has(reason)) {
+      seen.add(reason);
+      reasons.push(reason);
+    }
+  }
+  return { ready: reasons.length === 0, reasons };
+}
+
 // Detect clear push authorization in prompt text (metadata only; generator never pushes).
 function detectPushAuthorizedFromPrompt(prompt) {
   if (!prompt) return 'no';
@@ -386,9 +426,28 @@ function buildOutput(meta, prompt, opts) {
   const ts = new Date().toISOString();
   const statusStr = (meta.gitStatus || '').trim().replace(/\n/g, '; ') || 'clean';
   const embedded = meta.promptSource === 'embedded inbox handoff prompt';
+  const readiness = meta.readiness || { ready: true, reasons: [] };
+  const promptReadyLine = readiness.ready
+    ? 'yes'
+    : 'no — unresolved placeholders present';
   const reviewNote = embedded
     ? '- Review the embedded handoff prompt below before pasting into any IDE agent session.'
     : '- Fill in all [TBD] and [TASK NOT RESOLVED] placeholders before use.';
+
+  const warningBlock = readiness.ready
+    ? ''
+    : `\n## WARNING — prompt not ready
+
+WARNING:
+This generated prompt is NOT ready to paste into an implementer.
+It contains unresolved placeholders and requires human completion.
+
+Reasons:
+${readiness.reasons.map((r) => `- ${r}`).join('\n')}
+
+---
+
+`;
 
   return `# Handoff prompt — generated ${ts}
 
@@ -402,6 +461,7 @@ Method path:        ${meta.methodPath}
 Implementer:        ${meta.implementer}
 Discovery docs:     ${meta.discoveryDocs.join(', ') || '[none]'}
 Prompt source:      ${meta.promptSource}
+Prompt ready:       ${promptReadyLine}
 Output mode:        ${opts.mode}
 Push authorized:    ${meta.pushAuthorized}
 Human review:       REQUIRED${opts.dryRun ? '\nDry-run mode:       YES — no execution was performed' : ''}
@@ -418,7 +478,7 @@ This file is generated. Review before pasting into any IDE agent session.
 ${reviewNote}
 
 ---
-
+${warningBlock}
 ## Generated prompt
 
 ${prompt}
@@ -555,6 +615,18 @@ function main() {
     promptSource = 'dev-method template skeleton';
   }
 
+  const readiness = detectPromptCompleteness(prompt);
+
+  if (args.requireReady && !readiness.ready) {
+    process.stderr.write('ERROR: --require-ready: generated prompt is NOT ready to paste into an implementer.\n');
+    process.stderr.write('Unresolved placeholders detected:\n');
+    for (const reason of readiness.reasons) {
+      process.stderr.write(`  - ${reason}\n`);
+    }
+    process.stderr.write('No --out file was written. Resolve placeholders (e.g. embed a complete handoff prompt in the selected inbox file) and retry.\n');
+    exit(2);
+  }
+
   const writeTarget = (!args.dryRun && args.out) ? args.out : null;
   const mode = args.out
     ? (args.dryRun ? `dry-run (would write: ${resolve(args.out)})` : `file: ${resolve(args.out)}`)
@@ -564,7 +636,7 @@ function main() {
     {
       repoName, repoPath, gitRoot, branch, gitStatus, latestCommit, methodPath,
       implementer: IMPLEMENTER_LABELS[args.implementer],
-      discoveryDocs, pushAuthorized, promptSource,
+      discoveryDocs, pushAuthorized, promptSource, readiness,
     },
     prompt,
     { mode, dryRun: !!args.dryRun, outPath: writeTarget }
@@ -573,6 +645,9 @@ function main() {
   if (writeTarget) {
     writeFileSync(writeTarget, output, 'utf8');
     console.log(`Handoff prompt written to: ${writeTarget}`);
+    if (!readiness.ready) {
+      console.log('WARNING: written file is marked "Prompt ready: no" — unresolved placeholders present.');
+    }
     console.log('HUMAN REVIEW REQUIRED before paste / execute.');
   } else {
     if (args.dryRun && args.out) {

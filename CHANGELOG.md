@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Handoff generator: added ready-prompt quality guard. Generated output now includes a `Prompt ready: yes|no` metadata line; when unresolved `[TBD]` / `[TASK NOT RESOLVED]` / "human must fill in" / template skeleton placeholders are detected, a WARNING block is inserted before "## Generated prompt" with the list of reasons. New optional flag `--require-ready` exits non-zero (code 2) with a clear stderr error and skips any `--out` write when the prompt is not ready; default behavior is unchanged. Safety boundaries unchanged (still read-only, never commits/pushes/launches).
 - Fixed local handoff generator inbox discovery to prefer the current top "Ultimo aggiornamento" entry and otherwise the newest referenced inbox; trim TASK_DISCOVERY_DOCS to keep adjacent prose spaced.
 - Handoff generator: when the selected inbox contains a fenced copy-paste-ready prompt under a Future/handoff prompt heading, use that embedded prompt as the generated body instead of the generic template skeleton; metadata reports prompt source.
 - Handoff generator: normalize embedded prompt implementer lines (`Preferred implementer:` / `Implementer:`) to match `--implementer`, or insert after `TASK:` when missing; metadata `Push authorized` reflects clear push phrases in the embedded prompt (generator still never pushes).

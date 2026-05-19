@@ -236,6 +236,17 @@ Future dry-run test using GIS Tool:
 | Expected output | `docs/orchestrator/handoff/current.md` written inside the operational repo |
 | Pass condition | Prompt generated; no code executed; no commit/push; no runtime actions; output contains all safety guards; human review notice present |
 
+### 8b. Ready-prompt quality guard
+
+The v1 script must distinguish a ready actionable handoff from an incomplete skeleton that still needs human completion.
+
+- **Detection** — a simple deterministic helper inspects the assembled prompt for unresolved markers: `[TBD`, `[TASK NOT RESOLVED`, `human must fill in`, `TASK: [short title]`, `Current task: [one-line description]`, `Allowed scope: [TBD`, `Commit: [TBD`.
+- **Metadata** — output always includes a `Prompt ready: yes` or `Prompt ready: no — unresolved placeholders present` line in the header.
+- **Warning block** — when the prompt is not ready, a `## WARNING — prompt not ready` section is inserted before `## Generated prompt`, listing the reasons.
+- **`--require-ready` flag** — optional. When set and the prompt is not ready: the script writes a clear stderr error listing the unresolved markers, exits non-zero (code `2`), and does not write `--out`.
+- **Default behavior** — when `--require-ready` is not used, the script still prints / writes the output even if the prompt is not ready; the embedded `Prompt ready: no` line and WARNING block make the state explicit.
+- **Safety boundary** — the readiness guard is observational only. It never commits, pushes, deploys, tags, releases, launches a runner, or reads secrets.
+
 ### 9. Evolution boundary
 
 - **v1** — generates files only; no execution.
