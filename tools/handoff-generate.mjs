@@ -270,12 +270,16 @@ function extractEmbeddedHandoffPrompt(inboxContent) {
 // Normalize known implementer target lines in an embedded handoff prompt.
 function normalizeEmbeddedPrompt(prompt, implementerLabel) {
   if (!prompt || !implementerLabel) return prompt;
+  const prefLine = `Preferred implementer: ${implementerLabel}`;
   let out = prompt;
   if (/^Preferred implementer:\s*.*/im.test(out)) {
-    out = out.replace(
-      /^Preferred implementer:\s*.*/im,
-      `Preferred implementer: ${implementerLabel}`,
-    );
+    out = out.replace(/^Preferred implementer:\s*.*/im, prefLine);
+  } else if (/^Implementer:\s*.*/im.test(out)) {
+    out = out.replace(/^Implementer:\s*.*/im, prefLine);
+  } else if (/^TASK:/im.test(out)) {
+    out = out.replace(/^TASK:.*$/im, (m) => `${m}\n${prefLine}`);
+  } else {
+    out = `${prefLine}\n${out}`;
   }
   if (/^Implementer:\s*.*/im.test(out)) {
     out = out.replace(/^Implementer:\s*.*/im, `Implementer: ${implementerLabel}`);
@@ -287,10 +291,11 @@ function normalizeEmbeddedPrompt(prompt, implementerLabel) {
 function detectPushAuthorizedFromPrompt(prompt) {
   if (!prompt) return 'no';
   const patterns = [
-    /push\s+to\s+origin\s+main\s*\(\s*authorized\s*\)/i,
-    /push\s+origin\s+main\s+after\s+commit\s*\(\s*authorized\s*\)/i,
+    /push\s+to\s+origin\s+main\s*\([^)]*\bauthorized\b/i,
+    /push\s+origin\s+main\s+after\s+commit\s*\([^)]*\bauthorized\b/i,
     /push\s+is\s+explicitly\s+authorized/i,
     /push\s+authorized:\s*yes\b/i,
+    /push\s+authorized\s+yes\b/i,
   ];
   return patterns.some((p) => p.test(prompt)) ? 'yes' : 'no';
 }
