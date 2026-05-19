@@ -5,6 +5,30 @@
 - Current stable tag: `v0.1.1`
 - Scope: docs-only stabilization patch after first GIS Tool adoption
 - Status: tagged and usable as pinned method source
+- `main` contains unreleased handoff-hardening improvements (see below). Stable consumers pinning to `v0.1.1` do not get these automatically.
+
+## Unreleased since v0.1.1 (main — handoff hardening)
+
+Available now to active projects reading `main` intentionally. Not yet tagged as v0.1.2.
+
+- Authorized commit + push flow — `prompts/implementer-standard.md`
+- Multi-repo workspace guard — `prompts/implementer-standard.md`
+- IDE-agent handoff template — `templates/ide-agent-handoff-task.md`
+- Completion evidence rule — `prompts/implementer-standard.md`
+- PASS + follow-up UX request rule — `patterns/qa-pass-implementer-handoff.md`
+- LLMS pointer for IDE-agent handoff prompts — `LLMS.md`
+
+See `CHANGELOG.md` [Unreleased] for the full detail.
+
+## v0.1.2 candidate checklist
+
+Before tagging v0.1.2 — **requires explicit user instruction to release**:
+
+- [ ] Confirm examples and templates are coherent after handoff hardening
+- [ ] Verify no duplicated or contradictory rules across patterns/prompts/templates
+- [ ] Validate at least one real IDE-agent handoff using `templates/ide-agent-handoff-task.md`
+- [ ] Decide explicitly whether to tag v0.1.2
+- [ ] Do not tag or release without explicit user instruction
 
 ## v0.1.x — Stabilization and adoption
 
