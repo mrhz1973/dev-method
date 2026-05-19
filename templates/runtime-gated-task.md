@@ -49,6 +49,7 @@ For each gated action, before performing it, the implementer must:
 - **One gate at a time.** Do not combine multiple high-risk steps into a single gate request.
 - **No silent runtime mutation.** No runtime state is changed without the human gate approving first.
 - **Exact command required.** The Decision Packet must include the exact command or API call.
+- **Authorized doc/code push is not a gate.** If the task explicitly authorizes commit and push for a non-gated change (docs, code, configuration), follow the commit-and-push rules in `prompts/implementer-standard.md` and push without stopping. This does not extend to deploy, tag, release, or rollback — those always require a gate.
 
 ## Fallback / abort behavior
 

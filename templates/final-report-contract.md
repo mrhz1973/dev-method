@@ -26,7 +26,9 @@ _[Full or short commit hash, or "not committed" with reason]_
 
 ## Push status
 
-_[Pushed to remote: yes / no / not applicable — with reason if no]_
+- **Pushed to remote:** yes / no / not applicable
+- **Post-push git status:** _[clean / error / not applicable]_
+- **Reason if not pushed:** _[reason or "not applicable"]_
 
 ## Evidence pack path
 

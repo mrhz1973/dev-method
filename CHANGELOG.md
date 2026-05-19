@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Added QA PASS → implementer handoff pattern.
+- Clarified authorized commit + push flow: canonical rule in `prompts/implementer-standard.md`, pointer updates in task templates, final report contract, and QA handoff pattern.
 
 ## [0.1.1] — 2026-05-19
 

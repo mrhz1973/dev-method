@@ -97,9 +97,22 @@ For single-file HTML projects, follow `adapters/single-file-html.md`. Token pres
 
 1. Run required checks (linting, formatting, or project-specific checks).
 2. Selective commit with a clear commit message.
-3. Push to remote.
+3. Push to remote when authorized (see below).
 4. Produce and persist final report. See `templates/final-report-contract.md`.
 5. Declare workspace state: clean or dirty with explicit list.
+
+### Commit and push rules
+
+When a task explicitly authorizes commit **and** push:
+
+- Stage only the files listed in the task. Never use `git add .`.
+- Commit with the requested message.
+- If checks pass and the commit is created, run `git push origin main` (or the authorized branch).
+- Do not stop to ask for confirmation for that authorized push.
+- Stop only for: unexpected dirty files; merge conflict; rejected or non-fast-forward push; force push required; destructive operations; secrets or credentials; deploy, tag, or release; unrelated files; forbidden paths or repositories.
+
+When a task does **not** explicitly authorize push:
+- Commit locally if authorized; otherwise stop and report.
 
 ---
 

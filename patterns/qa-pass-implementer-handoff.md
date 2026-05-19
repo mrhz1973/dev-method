@@ -60,7 +60,8 @@ When implemented with n8n / OpenClaw / runner:
 - sends prompt to implementer;
 - monitors completion;
 - reports back to orchestrator;
-- never bypasses gates.
+- never bypasses gates;
+- when a generated prompt authorizes commit and push, the implementer follows the commit-and-push rules in `prompts/implementer-standard.md` — automation does not grant deploy, tag, or release permission.
 
 ## Required PASS fields
 

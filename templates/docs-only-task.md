@@ -58,14 +58,17 @@ If this task involves large docs or generated/state files, use targeted reads an
 - [ ] File tree inspection: confirm all expected files exist
 - [ ] _[Any project-specific checks]_
 
-## Selective commit
+## Selective commit and push
 
 Do not use `git add .`. Add only the files listed in this task.
 
 ```
 git add [file1] [file2] ...
 git commit -m "docs: [short description]"
+git push origin main
 ```
+
+If this task authorizes commit and push, run `git push origin main` immediately after a successful commit without stopping for confirmation. See commit-and-push rules in `prompts/implementer-standard.md`.
 
 ## Final report
 
