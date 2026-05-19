@@ -31,8 +31,9 @@ The method supports four autonomy levels (Level 0–3), allowing a project to st
 
 ## Current stable release
 
-- `v0.1.0` is the initial stable baseline.
-- `v0.1.1` is the next patch release candidate on `main` until tagged.
+- `v0.1.1` is the current stable tag.
+- `v0.1.0` remains the initial baseline.
+- Stable consumers should pin to tags, not `main`.
 
 ## Roadmap
 

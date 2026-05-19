@@ -2,8 +2,8 @@
 
 ## Current stable release
 
-- Current stable tag: `v0.1.0`
-- Scope: initial docs-only method structure
+- Current stable tag: `v0.1.1`
+- Scope: docs-only stabilization patch after first GIS Tool adoption
 - Status: tagged and usable as pinned method source
 
 ## v0.1.x — Stabilization and adoption
@@ -12,7 +12,7 @@ Purpose:
 Small documentation-only improvements discovered while importing dev-method into real projects.
 
 Note:
-`v0.1.1` is the stabilization patch candidate collecting policies discovered during first GIS Tool adoption (roadmap, large-file token policy, session/repo guard, idea intake, context compaction / debug reconstruction).
+`v0.1.1` collected the first GIS Tool adoption policies (roadmap, large-file token policy, session/repo guard, idea intake, context compaction / debug reconstruction).
 
 Allowed examples:
 - Clarify unclear wording found during first project imports.
