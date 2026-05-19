@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [Unreleased]
+
+- Added `ROADMAP.md` to track stabilization, first pilot adoption, template expansion, automation track, and release policy.
+- Added roadmap pointers to `README.md` and `LLMS.md`.
+
 ## [0.1.0] — 2026-05-19
 
 Initial docs-only structure for dev-method.
