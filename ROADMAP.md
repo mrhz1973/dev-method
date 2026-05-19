@@ -88,7 +88,17 @@ Do not add all templates blindly. Add the smallest useful template when a real r
 
 ## Future automation track
 
-Potential future work:
+### Local handoff generator (pre-runner — not yet implemented)
+
+First mechanical automation layer. Reads an operational repo's orchestrator docs and produces a ready-to-copy IDE-agent prompt. Human reviews and pastes; nothing executes automatically.
+
+Spec: `patterns/local-handoff-generator.md`.
+
+Evolution path: v0 (manual spec) → v1 (local script) → v2 (gated runner) → v3 (n8n orchestration).
+First target: GIS Tool (`mrhz1973/cursor-coordinate-converter`).
+
+### Other potential future work
+
 - Ollama classifier/router/risk scorer.
 - n8n control-plane jobs.
 - Branch cleanup automation.

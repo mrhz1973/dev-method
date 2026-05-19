@@ -34,6 +34,7 @@ Do not read everything by default. Use the reading order and conditional section
 | Handling user ideas, bugs, or feature requests found during app usage | `patterns/idea-intake-during-use.md` |
 | Defining what happens after user confirms a manual test PASS | `patterns/qa-pass-implementer-handoff.md` |
 | Writing an IDE agent (Windsurf/Cascade/Cursor) handoff prompt | `templates/ide-agent-handoff-task.md` |
+| Planning prompt-generation or runner automation for IDE-agent handoffs | `patterns/local-handoff-generator.md` |
 | Planning post-v0.1.0 work, stabilization, pilot adoption, template expansion, or future automation | `ROADMAP.md` |
 | Reviewing the target physical setup | `examples/martino-target-setup.md` |
 

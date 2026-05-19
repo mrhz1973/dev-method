@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added `patterns/local-handoff-generator.md`: pre-runner pattern for generating IDE-agent handoff prompts from operational repo orchestrator docs; added LLMS.md pointer and ROADMAP.md entry.
 - Added handoff-hardening checkpoint to `ROADMAP.md`: unreleased-since-v0.1.1 summary and v0.1.2 candidate checklist.
 - Added PASS + follow-up UX request rule to `patterns/qa-pass-implementer-handoff.md`; added pointer in `patterns/idea-intake-during-use.md`.
 - Added completion evidence rule to `prompts/implementer-standard.md`; updated final report requirements in `templates/ide-agent-handoff-task.md`; added completion evidence note in `patterns/qa-pass-implementer-handoff.md`.
