@@ -114,18 +114,81 @@ function safeRead(p) {
 // Discovery helpers
 // ---------------------------------------------------------------------------
 
+// Extract inbox-filename references from arbitrary text.
+// Matches three shapes in order:
+//   A. Full path:  docs/orchestrator/inbox/<filename>.md
+//   B. Date+time bare name:  YYYY-MM-DD_HHMM[...].md   (common backticked refs)
+//   C. Date-only bare name:  YYYY-MM-DD[...].md
+// Returns deduplicated filenames in first-seen order.
+function extractInboxRefs(text) {
+  if (!text) return [];
+  const out = [];
+  const seen = new Set();
+  const add = (name) => { if (!seen.has(name)) { seen.add(name); out.push(name); } };
+  const patterns = [
+    /docs\/orchestrator\/inbox\/([\w._-]+\.md)/g,
+    /(\d{4}-\d{2}-\d{2}_\d{4}[\w._-]+\.md)/g,
+    /(\d{4}-\d{2}-\d{2}[\w._-]+\.md)/g,
+  ];
+  for (const pat of patterns) {
+    let m;
+    while ((m = pat.exec(text)) !== null) add(m[1]);
+  }
+  return out;
+}
+
+// Slice the top (first / most recent) entry under the "## Ultimo aggiornamento"
+// section header. Entries are paragraphs separated by blank lines; the first
+// non-blank paragraph is returned. Falls back to '' if header missing.
+function extractTopUpdateEntry(latestContent) {
+  if (!latestContent) return '';
+  const lines = latestContent.split(/\r?\n/);
+  const headerPat = /^##\s+(ultimo\s+aggiornamento|latest\s+update|last\s+update)/i;
+  const headerIdx = lines.findIndex((l) => headerPat.test(l));
+  if (headerIdx === -1) return '';
+  let i = headerIdx + 1;
+  while (i < lines.length && !lines[i].trim()) i++;
+  const start = i;
+  while (i < lines.length) {
+    if (/^#{1,6}\s/.test(lines[i])) break;
+    if (!lines[i].trim()) break;
+    i++;
+  }
+  return lines.slice(start, i).join('\n');
+}
+
+// Sort inbox-filename candidates newest-first by leading date-like prefix.
+// Filenames using YYYY-MM-DD_HHMM... sort correctly via simple string compare.
+function compareInboxDesc(a, b) {
+  if (a === b) return 0;
+  return a < b ? 1 : -1;
+}
+
 function findInboxFile(repoRoot, latestContent) {
-  const pat = /docs\/orchestrator\/inbox\/([\w./-]+\.md)/g;
-  let m;
-  while ((m = pat.exec(latestContent)) !== null) {
-    const candidate = join(repoRoot, 'docs', 'orchestrator', 'inbox', m[1]);
-    if (existsSync(candidate)) return { path: candidate, name: m[1] };
-  }
   const inboxDir = join(repoRoot, 'docs', 'orchestrator', 'inbox');
-  if (existsSync(inboxDir)) {
-    const files = readdirSync(inboxDir).filter(f => f.endsWith('.md')).sort();
-    if (files.length) return { path: join(inboxDir, files[files.length - 1]), name: files[files.length - 1] };
+  const existsInInbox = (name) => existsSync(join(inboxDir, name));
+  const make = (name) => ({ path: join(inboxDir, name), name });
+
+  // 1. Prefer inbox refs found in the top "Ultimo aggiornamento" entry.
+  const topEntry = extractTopUpdateEntry(latestContent);
+  for (const name of extractInboxRefs(topEntry)) {
+    if (existsInInbox(name)) return make(name);
   }
+
+  // 2. Fallback: scan all latest.md references; pick newest by date-like prefix.
+  const all = extractInboxRefs(latestContent).filter(existsInInbox);
+  if (all.length) {
+    all.sort(compareInboxDesc);
+    return make(all[0]);
+  }
+
+  // 3. Fallback: inbox directory listing, newest by filename.
+  if (existsSync(inboxDir)) {
+    const files = readdirSync(inboxDir).filter((f) => f.endsWith('.md'));
+    files.sort(compareInboxDesc);
+    if (files.length) return make(files[0]);
+  }
+
   return null;
 }
 
@@ -215,11 +278,14 @@ function inline(s, fallback) {
 }
 
 function fillTemplate(tpl, vals) {
+  // Trim trailing whitespace/newlines from discoveryDocs to keep adjacent
+  // template prose (e.g. " for current scope") properly spaced after substitution.
+  const discoveryDocs = String(vals.discoveryDocs || '').replace(/\s+$/g, '');
   let out = tpl
     .replace(/OPERATIONAL_REPO/g, vals.repoName)
     .replace(/OPERATIONAL_PATH/g, vals.repoPath)
     .replace(/METHOD_REPO_REFERENCE/g, vals.methodPath)
-    .replace(/TASK_DISCOVERY_DOCS/g, vals.discoveryDocs)
+    .replace(/TASK_DISCOVERY_DOCS/g, discoveryDocs)
     .replace(/EXPECTED_NEXT_PASS/g, vals.nextPass)
     .replace(/ALLOWED_FILES/g, vals.allowedFiles)
     .replace(/FORBIDDEN_FILES/g, vals.forbiddenFiles)
