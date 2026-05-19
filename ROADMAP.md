@@ -97,7 +97,9 @@ Spec: `patterns/local-handoff-generator.md`.
 Evolution path: v0 (manual spec) → v1 (local script) → v2 (gated runner) → v3 (n8n orchestration).
 First target: GIS Tool (`mrhz1973/cursor-coordinate-converter`).
 
-**Next concrete target:** v1 script spec is defined in `patterns/local-handoff-generator.md` § v1 local script specification. Implementation may begin once v0 is validated end-to-end on GIS Tool and Cursor (or another suitable runtime) is locally available.
+**v1 implemented:** `tools/handoff-generate.mjs` — generates a ready-to-review handoff prompt from operational repo orchestrator docs. No execution, no commits, no runner. Run `node tools/handoff-generate.mjs --help` for usage.
+
+**Next target:** v1 acceptance test with GIS Tool (`mrhz1973/cursor-coordinate-converter`) once operational docs are in place; then v2 gated runner when Cursor or equivalent is locally available.
 
 ### Other potential future work
 

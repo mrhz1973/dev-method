@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added `tools/handoff-generate.mjs`: v1 local handoff generator script; reads operational repo orchestrator docs, generates a ready-to-review IDE-agent handoff prompt, writes to stdout or an explicit output file; no npm dependencies; read-only git; never commits, pushes, launches any runner, or reads secrets.
 - Added v1 script specification to `patterns/local-handoff-generator.md`: command shape, required inputs/output, safety behavior, git read-only contract, prompt assembly rules, acceptance test, and evolution boundary; updated ROADMAP.md next-target note.
 - Added `patterns/local-handoff-generator.md`: pre-runner pattern for generating IDE-agent handoff prompts from operational repo orchestrator docs; added LLMS.md pointer and ROADMAP.md entry.
 - Added handoff-hardening checkpoint to `ROADMAP.md`: unreleased-since-v0.1.1 summary and v0.1.2 candidate checklist.
