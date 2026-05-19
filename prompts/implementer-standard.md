@@ -67,6 +67,16 @@ If the user reports an idea, bug, or UX note during live usage, do not implement
 
 ---
 
+## Large-file / token-efficiency rule
+
+When working on large files — especially large single-file HTML projects — do not read the whole file unless there is a clear reason.
+
+Default approach: marker search (`grep` / `Select-String`), narrow line ranges, targeted `git diff`, extracted syntax checks, and small scoped patches.
+
+For single-file HTML projects, follow `adapters/single-file-html.md`. Token pressure alone is not a reason to split the architecture.
+
+---
+
 ## Common contract (all implementers)
 
 ### Preflight

@@ -48,6 +48,10 @@ Group 6–8 coherent items into this task. Do not create separate tasks for each
 
 _[List content requirements for each file. Pointers to specs are acceptable.]_
 
+## Large-file note
+
+If this task involves large docs or generated/state files, use targeted reads and diffs. Do not read or rewrite large files wholesale unless explicitly required by the task.
+
 ## Checks
 
 - [ ] `git diff --check` — no trailing whitespace or conflict markers

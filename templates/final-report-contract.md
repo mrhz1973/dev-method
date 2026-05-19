@@ -42,6 +42,14 @@ _[clean | dirty — if dirty, list uncommitted files and reason]_
 
 ---
 
+## Large-file handling
+
+- **Large files touched:** yes / no
+- **If yes — marker/range-based inspection used:** yes / no
+- **Full-file read/rewrite avoided:** yes / no / reason if no
+
+---
+
 ## Context compaction (DEBUG only)
 
 - **Compaction occurred during this task:** yes / no / not applicable

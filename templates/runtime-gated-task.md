@@ -54,6 +54,10 @@ For each gated action, before performing it, the implementer must:
 
 _[Describe what should happen if the human rejects the gate: abort, rollback, or alternative path.]_
 
+## Large-file note
+
+If this task touches a large file, use marker/range-based inspection and targeted diffs before proposing any gated or risky change. Do not read or rewrite the file wholesale.
+
 ## Checks (pre-gate)
 
 _[List any checks to run before sending the gate request.]_
