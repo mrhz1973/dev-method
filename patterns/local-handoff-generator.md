@@ -271,6 +271,58 @@ The v1 script must distinguish a ready actionable handoff from an incomplete ske
 
 ---
 
+## I. n8n handoff runtime compatibility
+
+Operational lessons from **CONTROL PLANE** self-hosted n8n handoff validation (criterion 2 manual handoff; criterion 3 end-to-end cycles). Apply when wiring `tools/handoff-generate.mjs` into an n8n **Execute Command** (or similar) node — not when running the script only on a developer workstation.
+
+**Security:** Never commit or paste real tokens, `chat_id`, credential IDs, webhook URLs, or VPS secrets into dev-method docs. Use placeholders only (`<TELEGRAM_BOT_TOKEN>`, `<CHAT_ID>`, `<CREDENTIAL_ID>`, `<WEBHOOK_URL>`).
+
+### Execute Command node availability (n8n v2)
+
+1. **n8n v2 can disable `n8n-nodes-base.executeCommand` when `NODES_EXCLUDE` is not explicitly set.** If the node is missing from the editor or fails at runtime, check instance configuration before assuming the workflow is wrong.
+
+2. **`NODES_EXCLUDE=[]` is the required explicit allow for CONTROL PLANE self-hosted n8n.** Treat this as *required configuration*, not “unset means allow all.” An empty or omitted exclude list may still block Execute Command; set `NODES_EXCLUDE=[]` explicitly in the n8n environment (e.g. compose / systemd env) and restart n8n after change.
+
+### Container user vs host CLI
+
+3. **Execute Command may run as user `root` inside the container** even when earlier diagnostic CLI tests on the host or in an interactive shell used user `node` (or another non-root user). Do not assume the same Unix user across: laptop shell, `docker exec` as `node`, and n8n workflow execution.
+
+4. **For Git repos mounted into the container, `git safe.directory` must be configured for the user that actually runs Execute Command** — often `root`, not only for `node`. Example pattern (paths are illustrative):
+
+   ```bash
+   git config --global --add safe.directory /path/to/mounted/operational-repo
+   git config --global --add safe.directory /path/to/mounted/dev-method
+   ```
+
+   Run this as the same user n8n uses for Execute Command (verify with `whoami` inside a test command node). A PASS from a manual `docker exec -u node …` dry-run does not prove root-backed workflow execution will pass.
+
+### Separate runtime gates (do not collapse)
+
+5. **Distinguish four independent PASS criteria:**
+
+   | Gate | What it proves |
+   |------|----------------|
+   | **Local CLI dry-run PASS** | `handoff-generate.mjs` on the developer machine: read-only, exit 0, `Prompt ready: yes` where expected |
+   | **Container CLI dry-run PASS** | Same command inside the n8n runtime image/volume layout as production (user, paths, env) |
+   | **n8n workflow Manual Trigger PASS** | Execute Command (or successor) completes in the editor/test run: exit 0, expected stdout/metadata |
+   | **Telegram delivery PASS** | Downstream notification node receives and delivers the cycle outcome (e.g. v4 template) after a real commit push — not the same as generator exit 0 |
+
+   Record each gate separately in CONTROL PLANE cycle docs (e.g. `docs/END_TO_END_CYCLES.md`); one PASS does not imply the others.
+
+6. **Recommend separate runtime gates; do not skip to an HTTP bridge** if a configuration fix (e.g. `NODES_EXCLUDE=[]`, `safe.directory` for root) is sufficient. Order: node visible → container CLI → manual workflow → notification after implementer commit. Add HTTP/API bridging only when Execute Command is unsuitable and a new gate is explicitly designed.
+
+### CONTROL PLANE criterion 3 (reference flow)
+
+Criterion 3 validates the chain: **handoff → implementer → commit → notification**. Cycle 1 may PASS on an operational repo (e.g. GIS); Cycle 2 should land on **dev-method** (docs-only) so the commit hash and Telegram v4 receipt are distinct. After push, record in CONTROL PLANE (not in this repo): commit hash + “Telegram v4 received” → Cycle 2 → **PASS**.
+
+### Generator behavior in n8n (unchanged)
+
+- `handoff-generate.mjs` remains **read-only** toward operational repos: no commit, push, deploy, tag, release, or implementer launch from the script.
+- n8n may **invoke** the script; n8n must not treat generator metadata `Push authorized: yes` as permission for the automation layer to push — that line describes the **human-authored handoff prompt** only.
+- Manual Trigger success (`Prompt ready: yes`, exit 0) is necessary but not sufficient for criterion 3; implementer work and push evidence remain human-gated outside the generator.
+
+---
+
 ## Related
 
 - `templates/ide-agent-handoff-task.md` — the prompt skeleton the generator fills.
@@ -278,3 +330,4 @@ The v1 script must distinguish a ready actionable handoff from an incomplete ske
 - `prompts/implementer-standard.md` — all implementer rules referenced by the generated prompt.
 - `patterns/qa-pass-implementer-handoff.md` — the PASS → handoff flow this generator supports.
 - `ROADMAP.md` § Future automation track — where local handoff generator fits in the larger plan.
+- § I above — n8n Execute Command, `NODES_EXCLUDE`, container user / `git safe.directory`, and separate runtime gates (CONTROL PLANE lessons).

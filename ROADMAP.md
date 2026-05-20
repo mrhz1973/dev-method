@@ -94,7 +94,7 @@ First mechanical automation layer. Reads an operational repo's orchestrator docs
 
 Spec: `patterns/local-handoff-generator.md`.
 
-Evolution path: v0 (manual spec) → v1 (local script) → v2 (gated runner) → v3 (n8n orchestration).
+Evolution path: v0 (manual spec) → v1 (local script) → v2 (gated runner) → v3 (n8n orchestration). n8n Execute Command / container runtime lessons: `patterns/local-handoff-generator.md` § I.
 First target: GIS Tool (`mrhz1973/cursor-coordinate-converter`).
 
 **v1 implemented:** `tools/handoff-generate.mjs` — generates a ready-to-review handoff prompt from operational repo orchestrator docs. No execution, no commits, no runner. Run `node tools/handoff-generate.mjs --help` for usage.
