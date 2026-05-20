@@ -2,20 +2,15 @@
 
 ## Status
 
-- **core/07 status:** v0.2.0 pending
-- **Not active in v0.1.x**
-- **Not stable**
-- **Not default reading** (see `LLMS.md` — Read when relevant only)
-- **Applies only to orchestrator role** (not Cursor / Claude Code implementer output)
-- **Purpose:** collect practical evidence before any v0.2.0 release decision
+v0.2.0 pending, not active in v0.1.x, not stable — same as `core/07-orchestrator-output-format.md` header. Indexed in `LLMS.md` (Read when relevant only). Orchestrator role only.
 
-Canonical rule: `core/07-orchestrator-output-format.md`
+**Purpose:** collect practical evidence before any v0.2.0 release decision. **Canonical rule:** `core/07-orchestrator-output-format.md` (this file does not replace it).
 
 ---
 
 ## Validation criteria
 
-Record PASS/FAIL per chat or project when testing the rule in real use.
+PASS/FAIL checklist when testing the canonical rule in real use (not a copy of the full rule).
 
 | Criterion | PASS means |
 |-----------|------------|
@@ -49,8 +44,5 @@ _Add rows as real sessions occur. Do not invent evidence._
 
 ## Promotion guard
 
-- **Do not promote v0.2.0** until core/07 has been exercised in at least **2–3 real chats/projects** with evidence rows above.
-- **No tag or release** is created or implied by this register.
-- **Stable v0.1.x** policy unchanged; consumers keep pinning tags (e.g. `v0.1.1`), not `main`, for stable behavior.
-- **Do not add** core/07 or this register to **Required reading** in `LLMS.md`.
-- Any future promotion to active v0.2.0 requires an **explicit human decision** (release checklist, tag, CHANGELOG release section) — not automatic from validation notes here.
+- Do not promote v0.2.0 until core/07 has evidence from at least **2–3 real chats/projects** (rows above).
+- No tag, release, or Required-reading promotion from this register — explicit human decision only.

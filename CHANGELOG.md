@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-- Added draft `core/07-orchestrator-output-format.md` (orchestrator NEXT/WAIT/DONE output format); core v0.2.0 pending — not active in stable v0.1.x; not a release and not v0.2.0 activation.
+- Added draft `core/07-orchestrator-output-format.md` and `core/07-orchestrator-output-format-validation.md` (v0.2.0 pending; not active in v0.1.x; not a release).
 - Documented n8n handoff runtime compatibility in `patterns/local-handoff-generator.md` § I: `NODES_EXCLUDE=[]`, Execute Command user `root` vs `node`, `git safe.directory`, separate local/container/workflow/Telegram gates, criterion 3 cycle notes (no secrets).
 - Handoff generator: completed embedded handoff hardening — `Embedded format: structured|legacy|none` metadata; `--strict-format` rejects legacy embedded prompts; legacy deprecation warning (v0.2.0 removal); structured conflict detection for TASK STATUS / Commit / Push; `TASK STATUS: in-progress` blocked; smoke tests in `tests/run-handoff-generator-smoke.mjs` and `tests/fixtures/`.
 - Handoff generator: canonical embedded handoff metadata fields (`TASK STATUS`, `Operation type`, `Commit`, `Push`, `Target file(s)`, `Risk level`). Structured `Push:` / `Commit:` take precedence over legacy prose detection; output includes Task status, Operation type, Risk level, Target files, Commit authorized, and Push authorized metadata lines. `TASK STATUS: resolved` marks prompt not ready (with warning and `--require-ready` failure). Added `templates/embedded-handoff.md` reference. Backward compatible with prompts lacking canonical fields.
