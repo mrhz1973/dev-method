@@ -75,6 +75,8 @@ Pilot objectives:
 Trigger:
 Create v0.2.0 templates only when repeated real workflow pain appears during project adoption.
 
+**Core draft (pending, not active in stable):** `core/07-orchestrator-output-format.md` — orchestrator NEXT/WAIT/DONE output format; indexed in `LLMS.md`; remains `pending — non ancora attivo in v0.1.0` until an explicit v0.2.0 release decision. Stable consumers on `v0.1.1` tags need not apply it.
+
 Planned template candidates:
 - `templates/state-update-batch.md`
 - `templates/inbox-decision-recording.md`
