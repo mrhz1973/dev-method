@@ -241,3 +241,5 @@ v0.3.0 (futuro): valutazione estensioni Sezione 11
 - core/03-autonomy-levels.md — livelli di autonomia Level 0-3
 - core/06-gates-and-decision-packets.md — gate alti e decision packet
 - templates/final-report-contract.md — formato output per ruolo implementer (distinto)
+
+Validation log: core/07-orchestrator-output-format-validation.md
