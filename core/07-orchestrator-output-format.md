@@ -1,4 +1,4 @@
-Status: core v0.2.0 (pending — non ancora attivo in v0.1.0)
+Status: core v0.2.0 (pending — non ancora attivo in v0.1.0; bozza non stable; opzionale, solo ruolo orchestrator)
 Applica a: qualunque LLM in ruolo di orchestrator (ChatGPT, Claude in ruolo orchestratore, altri).
 Non applica a: LLM in ruolo di implementer (Cursor, Claude Code), che hanno proprio template.
 
@@ -37,6 +37,8 @@ CASO DIVERSO: se devi attendere un input/azione utente che è strutturalmente ne
 WAIT: dati runtime n8n UI richiesti — utente deve leggere e incollare (gate runtime delegation Sezione 5 metodo)
 
 Formulazioni come "NEXT: attendo che l'utente lanci handoff-generate" sono VIETATE. Quelle sono WAIT mascherati da NEXT.
+
+Step che richiedono Cursor, Claude Code, Windsurf, UI n8n, deploy o altro runtime esterno: WAIT con gate citato, non NEXT (l'orchestrator non esegue il runtime).
 
 Quando usare WAIT
 
@@ -162,7 +164,7 @@ Distinzione importante:
 
 Comportamento richiesto:
 - Su aggio <target> → orchestrator legge, riferisce, chiude con NEXT, aspetta input prossimo turno
-- Su vai <target> → orchestrator legge, riferisci, esegue prossimo step senza pause
+- Su vai <target> → orchestrator legge, riferisce, esegue prossimo step senza pause
 - Su vai (senza target) → orchestrator riprende esecuzione del NEXT precedente
 
 8. Cosa NON fa questa regola
@@ -183,8 +185,8 @@ Incolli a inizio chat il contenuto sintetico di questa regola (versione compatta
 Opzione B — Custom Instructions permanenti del modello
 Se il modello supporta istruzioni utente persistenti (ChatGPT Settings → Personalization, GPT personalizzati, profili Anthropic Console), incolli la versione compatta una sola volta e vale per tutte le chat.
 
-Opzione C — Riferimento al file
-Una volta che dev-method v0.2.0 è pinned in un progetto, basta dire all'orchestrator:
+Opzione C — Riferimento al file (solo dopo release esplicita v0.2.0)
+Quando dev-method v0.2.0 sarà rilasciato e pinned in un progetto, basta dire all'orchestrator:
 
 Applica dev-method/core/07-orchestrator-output-format.md v0.2.0
 
