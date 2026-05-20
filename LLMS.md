@@ -22,7 +22,7 @@ Do not read everything by default. Use the reading order and conditional section
 | Working with file-based task queues | `patterns/file-based-task-lifecycle.md` |
 | Working with scheduled jobs | `patterns/scheduled-automation.md` |
 | Writing or reviewing orchestrator prompts | `prompts/orchestrator-bootstrap.md` |
-| Writing or reviewing orchestrator output behavior / NEXT-WAIT-DONE format | `core/07-orchestrator-output-format.md` (core v0.2.0 pending — not active in v0.1.x; do not add to required reading order) |
+| Writing or reviewing orchestrator output behavior / NEXT-WAIT-DONE format | `core/07-orchestrator-output-format.md` (v0.2.0 pending, not active in v0.1.x) |
 | Writing or reviewing implementer prompts | `prompts/implementer-standard.md` |
 | Understanding the role structure | `core/01-roles.md` |
 | Understanding branch conventions | `core/04-branch-safety.md` |
