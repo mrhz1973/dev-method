@@ -32,8 +32,11 @@ Flags:
   --repo               Absolute path to operational repo (required)
   --method             Path to dev-method repo (required)
   --implementer        windsurf | cursor | claude-code (required)
-  --out                Write output to this file; default is stdout
-  --stdout             Force output to stdout even if --out is set
+  --out                Write the full generated handoff (metadata + prompt) to this file;
+                       stdout stays minimal unless --stdout is also set. Safe: no implementer,
+                       commit, or push from the generator. For n8n/Telegram, prefer --out so
+                       automation can pass the full path while chat preview stays truncated.
+  --stdout             Force full output to stdout even when --out writes a file
   --dry-run            Generate prompt; report no execution was performed; skip --out write
   --next-pass          Override expected-next-pass extracted from discovery docs
   --commit-msg         Override proposed commit message
@@ -150,9 +153,27 @@ const IMPLEMENTER_LABELS = {
 // Discovery helpers
 // ---------------------------------------------------------------------------
 
+const INBOX_RECORD_NOT_FOUND =
+  '[inbox record not found — human must inspect docs/orchestrator/latest.md]';
+
+// Reject bogus captures such as ".md" from paths like docs/orchestrator/inbox/.md
+function isValidInboxFilename(name) {
+  if (!name || typeof name !== 'string') return false;
+  const base = name.trim();
+  if (!base.endsWith('.md')) return false;
+  if (base === '.md' || base.startsWith('.')) return false;
+  const stem = base.slice(0, -3);
+  if (!stem || !/[\w-]/.test(stem)) return false;
+  return true;
+}
+
+function formatInboxRecordPath(name) {
+  return isValidInboxFilename(name) ? `docs/orchestrator/inbox/${name}` : null;
+}
+
 // Extract inbox-filename references from arbitrary text.
 // Matches three shapes in order:
-//   A. Full path:  docs/orchestrator/inbox/<filename>.md
+//   A. Full path:  docs/orchestrator/inbox/<filename>.md  (stem must start with alnum)
 //   B. Date+time bare name:  YYYY-MM-DD_HHMM[...].md   (common backticked refs)
 //   C. Date-only bare name:  YYYY-MM-DD[...].md
 // Returns deduplicated filenames in first-seen order.
@@ -160,9 +181,13 @@ function extractInboxRefs(text) {
   if (!text) return [];
   const out = [];
   const seen = new Set();
-  const add = (name) => { if (!seen.has(name)) { seen.add(name); out.push(name); } };
+  const add = (name) => {
+    if (!isValidInboxFilename(name) || seen.has(name)) return;
+    seen.add(name);
+    out.push(name);
+  };
   const patterns = [
-    /docs\/orchestrator\/inbox\/([\w._-]+\.md)/g,
+    /docs\/orchestrator\/inbox\/([a-zA-Z0-9][\w._-]*\.md)/g,
     /(\d{4}-\d{2}-\d{2}_\d{4}[\w._-]+\.md)/g,
     /(\d{4}-\d{2}-\d{2}[\w._-]+\.md)/g,
   ];
@@ -202,8 +227,8 @@ function compareInboxDesc(a, b) {
 
 function findInboxFile(repoRoot, latestContent) {
   const inboxDir = join(repoRoot, 'docs', 'orchestrator', 'inbox');
-  const existsInInbox = (name) => existsSync(join(inboxDir, name));
-  const make = (name) => ({ path: join(inboxDir, name), name });
+  const existsInInbox = (name) => isValidInboxFilename(name) && existsSync(join(inboxDir, name));
+  const make = (name) => (isValidInboxFilename(name) ? { path: join(inboxDir, name), name } : null);
 
   // 1. Prefer inbox refs found in the top "Ultimo aggiornamento" entry.
   const topEntry = extractTopUpdateEntry(latestContent);
@@ -215,12 +240,13 @@ function findInboxFile(repoRoot, latestContent) {
   const all = extractInboxRefs(latestContent).filter(existsInInbox);
   if (all.length) {
     all.sort(compareInboxDesc);
-    return make(all[0]);
+    const picked = make(all[0]);
+    if (picked) return picked;
   }
 
   // 3. Fallback: inbox directory listing, newest by filename.
   if (existsSync(inboxDir)) {
-    const files = readdirSync(inboxDir).filter((f) => f.endsWith('.md'));
+    const files = readdirSync(inboxDir).filter((f) => isValidInboxFilename(f));
     files.sort(compareInboxDesc);
     if (files.length) return make(files[0]);
   }
@@ -670,6 +696,8 @@ Discovery docs:     ${meta.discoveryDocs.join(', ') || '[none]'}
 Prompt source:      ${meta.promptSource}
 Embedded format:    ${meta.embeddedFormat || 'none'}
 Prompt ready:       ${promptReadyLine}
+Generated prompt length: ${meta.generatedPromptLength ?? 0}
+Generated prompt available: ${meta.generatedPromptAvailable ?? 'no'}
 Task status:        ${metaDisplay(canon.taskStatus)}
 Operation type:     ${metaDisplay(canon.operationType)}
 Risk level:         ${metaDisplay(canon.riskLevel)}
@@ -776,9 +804,12 @@ function main() {
     if (d.pushAuthorized && pushAuthorized !== 'yes') pushAuthorized = d.pushAuthorized;
 
     const inbox = findInboxFile(repoPath, latestContent);
-    if (inbox) {
-      discoveryDocs.push(`docs/orchestrator/inbox/${inbox.name}`);
-      inboxRecord = `docs/orchestrator/inbox/${inbox.name}`;
+    if (inbox?.name) {
+      const inboxPath = formatInboxRecordPath(inbox.name);
+      if (inboxPath) {
+        discoveryDocs.push(inboxPath);
+        inboxRecord = inboxPath;
+      }
       const inboxContent = safeRead(inbox.path);
       if (inboxContent) {
         embeddedPrompt = extractEmbeddedHandoffPrompt(inboxContent);
@@ -833,7 +864,7 @@ function main() {
       allowedFiles: inline(allowedFiles, TBD),
       forbiddenFiles: inline(forbiddenFiles, TBD),
       commitMsg: commitMsg || TBD,
-      inboxRecord: inboxRecord || '[inbox record — if applicable]',
+      inboxRecord: inboxRecord || INBOX_RECORD_NOT_FOUND,
       implementerLabel: IMPLEMENTER_LABELS[args.implementer],
       pushAuthorized,
     });
@@ -860,12 +891,17 @@ function main() {
     ? (args.dryRun ? `dry-run (would write: ${resolve(args.out)})` : `file: ${resolve(args.out)}`)
     : 'stdout';
 
+  const promptBody = prompt || '';
+  const generatedPromptLength = promptBody.length;
+  const generatedPromptAvailable = promptBody.trim() ? 'yes' : 'no';
+
   const output = buildOutput(
     {
       repoName, repoPath, gitRoot, branch, gitStatus, latestCommit, methodPath,
       implementer: IMPLEMENTER_LABELS[args.implementer],
       discoveryDocs, pushAuthorized, commitAuthorized, promptSource, readiness,
       embeddedMeta: embeddedMeta || {}, embeddedFormat,
+      generatedPromptLength, generatedPromptAvailable,
     },
     prompt,
     { mode, dryRun: !!args.dryRun, outPath: writeTarget }

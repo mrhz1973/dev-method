@@ -321,6 +321,14 @@ Criterion 3 validates the chain: **handoff → implementer → commit → notifi
 - n8n may **invoke** the script; n8n must not treat generator metadata `Push authorized: yes` as permission for the automation layer to push — that line describes the **human-authored handoff prompt** only.
 - Manual Trigger success (`Prompt ready: yes`, exit 0) is necessary but not sufficient for criterion 3; implementer work and push evidence remain human-gated outside the generator.
 
+### Telegram preview vs full prompt file
+
+- **Telegram preview is often truncated** — do not rely on the chat snippet alone for copy-paste or automation.
+- **Recommended:** run the generator with `--out <path>` so the **full** handoff (metadata + `## Generated prompt`) is written to disk; the n8n workflow should surface **`Full prompt path`** (or equivalent) in the Telegram handoff, not only the preview body.
+- **`--out` does not launch an implementer** and does not commit or push; it only writes the generator output file when not in `--dry-run`.
+- Header metadata includes parseable lines: `Prompt ready:`, `Generated prompt length:`, `Generated prompt available:` — keep downstream parsers aligned with these exact prefixes.
+- **Inbox path safety:** the generator never emits `docs/orchestrator/inbox/.md`; a resolved inbox file is always `docs/orchestrator/inbox/<filename>.md`, or an explicit fallback placeholder when no inbox record is found.
+
 ---
 
 ## Related

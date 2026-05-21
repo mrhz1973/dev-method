@@ -178,6 +178,43 @@ function assertExcludes(haystack, needle, label) {
   assertIncludes(r.stdout, 'Push authorized:    no', 'precedence: structured Push not authorized wins');
 }
 
+// --- inbox path: never docs/orchestrator/inbox/.md; preserve real filename ---
+{
+  const dir = mkdtempSync(join(tmpdir(), 'handoff-smoke-'));
+  temps.push(dir);
+  const inboxDir = join(dir, 'docs', 'orchestrator', 'inbox');
+  mkdirSync(inboxDir, { recursive: true });
+  writeFileSync(join(inboxDir, INBOX_NAME), '# no embedded\n', 'utf8');
+  writeFileSync(
+    join(dir, 'docs', 'orchestrator', 'latest.md'),
+    `# latest\n\n## Ultimo aggiornamento\n\nBroken ref docs/orchestrator/inbox/.md — use real inbox.\n`,
+    'utf8'
+  );
+  const r = runHandoff(dir);
+  assertExcludes(r.stdout, 'docs/orchestrator/inbox/.md', 'inbox path: never bare .md path');
+  assertIncludes(r.stdout, `docs/orchestrator/inbox/${INBOX_NAME}`, 'inbox path: real filename preserved');
+  assertIncludes(r.stdout, 'Generated prompt length:', 'inbox path: prompt length metadata');
+}
+
+// --- inbox fallback when no inbox files ---
+{
+  const dir = mkdtempSync(join(tmpdir(), 'handoff-smoke-'));
+  temps.push(dir);
+  mkdirSync(join(dir, 'docs', 'orchestrator'), { recursive: true });
+  writeFileSync(
+    join(dir, 'docs', 'orchestrator', 'latest.md'),
+    `# latest\n\n## Ultimo aggiornamento\n\nNo inbox file yet.\n`,
+    'utf8'
+  );
+  const r = runHandoff(dir);
+  assertExcludes(r.stdout, 'docs/orchestrator/inbox/.md', 'no inbox: never bare .md path');
+  assertIncludes(
+    r.stdout,
+    '[inbox record not found — human must inspect docs/orchestrator/latest.md]',
+    'no inbox: explicit fallback placeholder'
+  );
+}
+
 for (const d of temps) {
   try { rmSync(d, { recursive: true, force: true }); } catch (_) {}
 }
