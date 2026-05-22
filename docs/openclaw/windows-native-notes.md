@@ -47,6 +47,8 @@ Operational guidance for **home machine** PM-51 and later local-only gates. Not 
 
 ## Related
 
+- PM-51 runbook: `docs/control-plane/pm-51-runbook-light.md`
+- PM-51 decision matrix: `docs/control-plane/pm-51-decision-matrix.md`
 - Operating memory: `docs/control-plane/operating-memory.md`
 - Execution record template: `docs/runtime-packets/templates/pm-51-execution-record.md`
 - Backlog: `docs/control-plane/backlog-status.md`

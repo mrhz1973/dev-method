@@ -39,6 +39,8 @@ Do not read everything by default. Use the reading order and conditional section
 | Planning post-v0.1.0 work, stabilization, pilot adoption, template expansion, or future automation | `ROADMAP.md` |
 | Reviewing the target physical setup | `examples/martino-target-setup.md` |
 | CONTROL PLANE / OpenClaw PM gates (44–51), PM-51 prep, Windows-native OpenClaw | `docs/control-plane/operating-memory.md`, `docs/openclaw/windows-native-notes.md`, `docs/control-plane/backlog-status.md` |
+| Executing or handoff PM-51 at home (runbook, matrix, new chat) | `docs/control-plane/pm-51-runbook-light.md`, `docs/control-plane/pm-51-decision-matrix.md`, `docs/control-plane/pm-51-new-chat-handoff-checklist.md` |
+| PM-52 after PM-51 PASS (design stub only) | `docs/control-plane/pm-52-pre-design-stub.md` |
 | Recording a future PM-51 home execution (after real run only) | `docs/runtime-packets/templates/pm-51-execution-record.md` |
 
 ## Do not read by default

@@ -2,7 +2,7 @@
 
 Consolidated docs-only context for **dev-method** and CONTROL PLANE runtime gates. This file is preparation and handoff memory — not a runtime log.
 
-**Last docs consolidation:** 2026-05-22 (work PC, docs-only batch).
+**Pointers (no duplicate detail):** PM-51 docs prep `8563f54`+ on `main` · PM-51 **NOT EXECUTED** · home only (`mrhz`, `C:\Users\mrhz\Documents\AI\GitHub\control-plane`) · work PC **docs-only** · PM-52 after PM-51 PASS · PM-34 **BLOCCATO**.
 
 ## Scope of this repo
 
@@ -71,6 +71,10 @@ Gates are sequential preparation/validation steps on the home OpenClaw stack. Do
 
 ## Related docs
 
+- PM-51 runbook (light): `docs/control-plane/pm-51-runbook-light.md`
+- PM-51 decision matrix: `docs/control-plane/pm-51-decision-matrix.md`
+- PM-51 new-chat checklist: `docs/control-plane/pm-51-new-chat-handoff-checklist.md`
+- PM-52 pre-design stub: `docs/control-plane/pm-52-pre-design-stub.md`
 - Windows-native execution notes: `docs/openclaw/windows-native-notes.md`
 - PM-51 record template (empty placeholders): `docs/runtime-packets/templates/pm-51-execution-record.md`
 - Backlog / next gate: `docs/control-plane/backlog-status.md`
