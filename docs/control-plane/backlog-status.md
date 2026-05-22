@@ -4,7 +4,7 @@ Snapshot for routing and orchestrator handoff. Update only when gate state chang
 
 **As of 2026-05-22 (work PC):** prep commit `8563f54` · PM-51 **NOT EXECUTED** · home only · work PC docs-only · PM-52 after PM-51 PASS · PM-34 **BLOCCATO**.
 
-**Runbook / matrix / checklist:** `pm-51-runbook-light.md`, `pm-51-decision-matrix.md`, `pm-51-new-chat-handoff-checklist.md` · **PM-52 stub:** `pm-52-pre-design-stub.md`.
+**Handoff ChatGPT (copiabile):** `docs/handoffs/pm-51-openclaw-confined-gateway-noop-probe-new-chat.md` · Runbook/matrix/checklist in `docs/control-plane/`.
 
 ---
 

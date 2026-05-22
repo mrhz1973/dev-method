@@ -74,6 +74,7 @@ Gates are sequential preparation/validation steps on the home OpenClaw stack. Do
 - PM-51 runbook (light): `docs/control-plane/pm-51-runbook-light.md`
 - PM-51 decision matrix: `docs/control-plane/pm-51-decision-matrix.md`
 - PM-51 new-chat checklist: `docs/control-plane/pm-51-new-chat-handoff-checklist.md`
+- **PM-51 handoff copiabile (ChatGPT):** `docs/handoffs/pm-51-openclaw-confined-gateway-noop-probe-new-chat.md`
 - PM-52 pre-design stub: `docs/control-plane/pm-52-pre-design-stub.md`
 - Windows-native execution notes: `docs/openclaw/windows-native-notes.md`
 - PM-51 record template (empty placeholders): `docs/runtime-packets/templates/pm-51-execution-record.md`
