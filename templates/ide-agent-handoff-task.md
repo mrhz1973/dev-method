@@ -3,6 +3,8 @@
 Copy-paste this template when handing a task to an IDE agent (Windsurf/Cascade, Cursor, Claude Code, or equivalent).
 Replace all `ALL_CAPS` placeholders. Remove unused optional sections.
 
+**Outside the copyable block:** routing hints and human return commands (`aggio control`, `aggio dev-method`, `format`, `next`, …). Do not put those inside the fenced prompt — see `patterns/cursor-prompt-format-contract.md`.
+
 ---
 
 ```
@@ -77,6 +79,7 @@ FINAL REPORT (required):
 - Gate required: yes / no
 
 Implementation summary without commit/push evidence is not final.
+Do not end with orchestrator return commands (aggio, format, next) — those stay outside this block.
 ```
 
 ---

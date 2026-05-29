@@ -205,6 +205,8 @@ Orchestrators may place routing hints **outside** the block pasted into Cursor (
 
 The **copyable prompt body** should start with the executable task instruction (for example repository/branch verification), not UI labels such as `CURSOR MODE:`, `MODEL:`, `REPO:`, or `BRANCH:` — unless a specific generator schema requires them inside the body.
 
+Do **not** put human return commands (`aggio control`, `aggio dev-method`, `format`, `next`, or similar) inside the copyable prompt. Those belong outside for the human after Cursor finishes. The implementer final report ends with git evidence, not a chat return line.
+
 See `patterns/cursor-prompt-format-contract.md`.
 
 ---

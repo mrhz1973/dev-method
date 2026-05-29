@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Clarified that human return commands such as aggio control/dev-method stay outside copyable Cursor prompts.
 - Added control-plane advanced pilot / strategic sync policy — `patterns/operational-repo-to-method-sync.md`, `examples/control-plane.md`, README and LLMS pointers.
 - Added remote hash verification rule — `patterns/remote-hash-pass-verification.md`; implementer prompt and completion evidence updated.
 - Added rolling implementer report pattern — `patterns/rolling-implementer-report.md`.
