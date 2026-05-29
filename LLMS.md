@@ -30,6 +30,10 @@ Do not read everything by default. Use the reading order and conditional section
 | Checking gate policy | `core/06-gates-and-decision-packets.md` |
 | Reviewing a historical advanced case | `examples/alina-lavoro.md` |
 | Working on GIS Tool | `examples/gis-tool.md` |
+| control-plane strategic/method sync (promote reusable rules into dev-method) | `patterns/operational-repo-to-method-sync.md`, `examples/control-plane.md` |
+| Remote hash PASS verification | `patterns/remote-hash-pass-verification.md` |
+| Rolling post-push implementer report on GitHub | `patterns/rolling-implementer-report.md` |
+| Cursor copy-paste prompt formatting | `patterns/cursor-prompt-format-contract.md`, `prompts/implementer-standard.md` |
 | Multiple repos, sessions, or workstations are active | `patterns/session-and-repo-guard.md` |
 | Context was compacted mid-debug or resuming a DEBUG task after compaction | `patterns/context-compaction-debug-reconstruction.md` |
 | Handling user ideas, bugs, or feature requests found during app usage | `patterns/idea-intake-during-use.md` |
@@ -43,9 +47,15 @@ Do not read everything by default. Use the reading order and conditional section
 | PM-52 after PM-51 PASS (design stub only) | `docs/control-plane/pm-52-pre-design-stub.md` |
 | Recording a future PM-51 home execution (after real run only) | `docs/runtime-packets/templates/pm-51-execution-record.md` |
 
+## control-plane vs dev-method
+
+- **control-plane operational tasks** read control-plane foundation docs (`PROJECT_VISION`, task PM, runtime docs). Do not load all of dev-method for every control-plane step.
+- **dev-method** is read when importing **reusable** method patterns into this repo or when another project pins dev-method as its method source.
+- When a **reusable strategic rule** lands in control-plane, the orchestrator should review whether dev-method needs a method sync (`patterns/operational-repo-to-method-sync.md`).
+
 ## Do not read by default
 
-- All `examples/` files unless the current project is that example.
+- All `examples/` files unless the current project is that example (GIS Tool, control-plane pointer, Alina Lavoro, etc.).
 - All `templates/` files unless you are filling in a template.
 - All `patterns/` files unless the current task involves that pattern.
 

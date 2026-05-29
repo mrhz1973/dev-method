@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+- Added control-plane advanced pilot / strategic sync policy — `patterns/operational-repo-to-method-sync.md`, `examples/control-plane.md`, README and LLMS pointers.
+- Added remote hash verification rule — `patterns/remote-hash-pass-verification.md`; implementer prompt and completion evidence updated.
+- Added rolling implementer report pattern — `patterns/rolling-implementer-report.md`.
+- Added Cursor prompt formatting contract — `patterns/cursor-prompt-format-contract.md`.
+- Clarified that reusable strategic lessons from operational repos (especially control-plane) should be promoted into dev-method when they apply across future projects.
 - Added draft `core/07-orchestrator-output-format.md` and `core/07-orchestrator-output-format-validation.md` (v0.2.0 pending; not active in v0.1.x; not a release).
 - Documented n8n handoff runtime compatibility in `patterns/local-handoff-generator.md` § I: `NODES_EXCLUDE=[]`, Execute Command user `root` vs `node`, `git safe.directory`, separate local/container/workflow/Telegram gates, criterion 3 cycle notes (no secrets).
 - Handoff generator: completed embedded handoff hardening — `Embedded format: structured|legacy|none` metadata; `--strict-format` rejects legacy embedded prompts; legacy deprecation warning (v0.2.0 removal); structured conflict detection for TASK STATUS / Commit / Push; `TASK STATUS: in-progress` blocked; smoke tests in `tests/run-handoff-generator-smoke.mjs` and `tests/fixtures/`.

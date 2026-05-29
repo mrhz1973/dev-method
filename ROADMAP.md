@@ -20,6 +20,16 @@ Available now to active projects reading `main` intentionally. Not yet tagged as
 
 See `CHANGELOG.md` [Unreleased] for the full detail.
 
+### Control-plane strategic sync (unreleased)
+
+Patterns promoted from control-plane PROJECT_VISION v2.6 (2026-05-29), without copying the operational repo:
+
+- Remote hash verification — PASS requires `git ls-remote` / `git rev-parse origin/main`; GitHub raw is secondary
+- Rolling implementer report — two-commit stop; report-only commit must not replace real task SHA
+- Cursor prompt formatting contract — routing metadata outside copyable prompt body
+- Operational repo → method repo sync rule — reusable control-plane strategic changes trigger dev-method review
+- control-plane documented as advanced live pilot (after GIS Tool) — `examples/control-plane.md`
+
 ## v0.1.2 candidate checklist
 
 Before tagging v0.1.2 — **requires explicit user instruction to release**:

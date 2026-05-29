@@ -25,9 +25,13 @@ AI agents lose context between sessions. GitHub-hosted docs serve as the persist
 
 The method supports four autonomy levels (Level 0–3), allowing a project to start with full human oversight and progressively delegate recoverable work to agents while keeping a human gate for irreversible or high-risk actions.
 
-## First real pilot
+## Pilots
 
-**GIS Tool** is the first real pilot project using dev-method at Level 2.5 / Level 3-track.
+**GIS Tool** remains the first real pilot project using dev-method at Level 2.5 / Level 3-track.
+
+**control-plane** (`mrhz1973/control-plane`) is the active advanced orchestration pilot where the method is evolved under real low-touch loop pressure. Reusable strategic lessons from control-plane (for example remote hash verification, rolling implementer reports, and Cursor prompt formatting) are **periodically promoted** back into dev-method — see `patterns/operational-repo-to-method-sync.md` and `examples/control-plane.md`.
+
+**dev-method** stays a method/reference repository, not an operational or runtime repo.
 
 ## Current stable release
 

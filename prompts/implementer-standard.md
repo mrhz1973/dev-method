@@ -130,7 +130,7 @@ When a task does **not** explicitly authorize push:
 
 ### Completion evidence rule
 
-"Done", "implemented", or IDE status messages such as "feedback submitted" are **not** final task completion signals.
+"Done", "implemented", SUCCESS, or IDE status messages such as "feedback submitted" are **not** final task completion signals and are **not** PASS.
 
 For any task that authorizes commit + push, the task is complete only when all of the following exist:
 
@@ -139,13 +139,73 @@ For any task that authorizes commit + push, the task is complete only when all o
 3. Commit hash.
 4. Push result (success or explicit failure reason — never force-push on rejection).
 5. `git status --short` after push.
-6. Final report delivered.
+6. **Remote hash verification** — verbatim output showing the task commit on `origin/main` (see below).
+7. Final report delivered with **verbatim** git command output, not summaries only.
 
 If implementation is done but commit or push has not happened, continue to commit/push when the task authorizes it — do not stop with a descriptive summary.
 
 If push fails or is rejected/non-fast-forward, stop and report; never force-push.
 
-Git/GitHub evidence is the source of truth. IDE UI messages are not.
+Git/GitHub evidence is the source of truth. IDE UI messages and chat SUCCESS text are not.
+
+### Remote hash PASS verification
+
+PASS requires verifiable remote evidence, not a SUCCESS message from the implementer.
+
+**Primary sources:**
+
+```bash
+git ls-remote origin main
+```
+
+or after fetch:
+
+```bash
+git rev-parse origin/main
+```
+
+**GitHub raw** (or `web_fetch` of a file) is secondary and may be stale. If raw content and remote hash diverge, **remote hash wins**. Do not claim PASS without remote hash confirmation.
+
+Use local `git log` / `git status` only to diagnose why the remote does not show the expected commit (missing push, wrong branch, commit never made, rejected push).
+
+See `patterns/remote-hash-pass-verification.md`.
+
+### Final report — verbatim git output
+
+Include copy-paste **verbatim** terminal output for post-push verification commands. Do **not** replace verbatim output with markdown tables or paraphrased summaries.
+
+Minimum when push is authorized:
+
+```bash
+git ls-remote origin main
+git log --oneline -5
+git status --short
+git rev-parse HEAD
+git rev-parse origin/main
+git branch --show-current
+```
+
+See `templates/final-report-contract.md`.
+
+### Rolling report (two-commit tasks)
+
+When the task requires a rolling implementer report on GitHub after push:
+
+1. **Commit 1** — real task changes; push.
+2. Capture post-push evidence; update report file only.
+3. **Commit 2** — report-only; push; **stop**.
+
+The report-only commit must **not** be recorded as `real_task_commit`. PASS is satisfied when commit 1's SHA appears on `origin/main`, even if `HEAD` is commit 2 afterward.
+
+See `patterns/rolling-implementer-report.md`.
+
+### Copyable prompt vs human routing
+
+Orchestrators may place routing hints **outside** the block pasted into Cursor (window, model, repo color, do-not-use-other-repo warnings).
+
+The **copyable prompt body** should start with the executable task instruction (for example repository/branch verification), not UI labels such as `CURSOR MODE:`, `MODEL:`, `REPO:`, or `BRANCH:` — unless a specific generator schema requires them inside the body.
+
+See `patterns/cursor-prompt-format-contract.md`.
 
 ---
 
