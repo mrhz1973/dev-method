@@ -29,6 +29,7 @@ Not required for: project-specific runtime details, transient PM states, local m
 - Gate policy improvements
 - Report contracts
 - Multi-repo / session safety rules
+- Implementer safe local repo update during preflight (all target repos; human only on diagnostic gates)
 
 ## Required sync flow
 
@@ -45,6 +46,7 @@ Not required for: project-specific runtime details, transient PM states, local m
 | Remote hash verification guard | `patterns/remote-hash-pass-verification.md` |
 | Rolling implementer report | `patterns/rolling-implementer-report.md` |
 | Cursor prompt format contract | `patterns/cursor-prompt-format-contract.md` |
+| Safe local update in implementer preflight | `prompts/implementer-standard.md`, `templates/ide-agent-handoff-task.md` |
 | Foundation / status document split | `examples/control-plane.md` (pointer) |
 | Explicit no-runtime gates for docs tasks | `core/06-gates-and-decision-packets.md` (existing) |
 

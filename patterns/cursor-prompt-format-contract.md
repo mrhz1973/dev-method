@@ -33,7 +33,7 @@ Recommended first line:
 You are working in the current Cursor workspace. Before editing, verify that this is the correct repository and branch.
 ```
 
-Then: git preflight, expected remote hash (when relevant), goal, allowed/forbidden paths, validation, commit/push rules, and final report requirements (verbatim git evidence).
+Then: safe local repo update and git preflight (fetch, status, pull `--ff-only`, `ls-remote`, `rev-parse` — Cursor can run these; they belong **inside** the executable prompt), expected remote hash when relevant, goal, allowed/forbidden paths, validation, commit/push rules, and final report requirements (verbatim git evidence).
 
 ## Human return commands stay outside Cursor prompts
 

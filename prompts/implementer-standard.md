@@ -95,10 +95,36 @@ For single-file HTML projects, follow `adapters/single-file-html.md`. Token pres
 
 ### Preflight
 
-1. Verify repository top-level matches expected project.
-2. Verify remote points to the correct repository.
-3. Verify current branch is correct (or create/switch as authorized).
-4. Check `git status --short`.
+Routine **safe local repository synchronization** is the implementer's job for **every target repo** — including `dev-method`, `control-plane`, GIS Tool (`cursor-coordinate-converter`), and any future operational repo that imports these patterns. The human normally only opens the correct Cursor window/repo; they should **not** be asked to run routine update manually before every task.
+
+Run this safe update block at the start of preflight (adapt branch name if the task authorizes a branch other than `main`):
+
+```bash
+git fetch --prune origin
+git status --short
+git branch --show-current
+git remote -v
+git pull --ff-only origin main
+git ls-remote origin main
+git rev-parse HEAD
+git rev-parse origin/main
+```
+
+Then confirm:
+
+1. Repository top-level matches the expected project.
+2. Remote URL points to the correct repository.
+3. Current branch matches the task (or create/switch only when authorized).
+4. Workspace state is understood before any edit.
+
+**Stop and report** (ask the human only when there is a real diagnostic gate) for:
+
+- Unexpected dirty or conflicting files before pull
+- Wrong repo or wrong branch
+- Rejected or non-fast-forward pull
+- Auth failure, missing clone, ambiguous workstation, or suspected repo corruption
+
+**Never** use `git reset`, `git clean`, `git stash`, force pull, or force push unless the task explicitly scopes and gates that action.
 
 ### Execution
 

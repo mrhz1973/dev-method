@@ -29,11 +29,20 @@ MULTI-REPO GUARD:
 
 ---
 
-PREFLIGHT (required before any edit):
-1. git rev-parse --show-toplevel  → must match OPERATIONAL_PATH
-2. git branch --show-current      → must match authorized branch
-3. git status --short             → must be clean (or note expected untracked)
-4. Pull if behind: git pull --ff-only origin main
+PREFLIGHT — safe local update (implementer runs this; human does not do routine sync):
+Run for the TARGET repo in this workspace (dev-method, control-plane, GIS Tool, or other operational repo):
+  git fetch --prune origin
+  git status --short
+  git branch --show-current
+  git remote -v
+  git pull --ff-only origin main
+  git ls-remote origin main
+  git rev-parse HEAD
+  git rev-parse origin/main
+Then verify:
+  git rev-parse --show-toplevel  → must match OPERATIONAL_PATH
+  branch and remote                → must match task authorization
+Stop only for diagnostic gates: unexpected dirty state, wrong repo/branch, rejected pull, auth failure, conflict, missing clone, ambiguous workstation. Never reset/clean/stash/force pull/force push unless explicitly gated.
 
 ---
 
