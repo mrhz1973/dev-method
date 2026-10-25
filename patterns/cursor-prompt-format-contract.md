@@ -37,11 +37,13 @@ Then: safe local repo update and git preflight (fetch, status, pull `--ff-only`,
 
 ## Human return commands stay outside Cursor prompts
 
-Orchestrator or chat **return commands** are for the **human after** Cursor finishes — not instructions Cursor can execute.
+Return commands for the human to send to another chat after Cursor finishes are not shell instructions or part of the delegated task body.
 
-- Do **not** put `aggio control`, `aggio dev-method`, `format`, `next`, or similar return lines inside the copyable prompt.
+- Do **not** put `agg control`, `agg dev-method`, `format`, `next`, or similar return lines inside the copyable prompt.
 - If the human needs a return instruction, write it **outside** the prompt (before or after the copyable block).
 - The Cursor final report should end with required evidence (verbatim git output, changed files, commit hash) — **not** with a chat return command.
+
+This formatting rule does not exempt implementers from recognizing `agg` when the owner sends it directly to their chat. Work/Codex/IDE agents must then read their scoped task, current authorized GitHub comments/reviews and acknowledge the instruction under [`core/02-session-protocol.md`](../core/02-session-protocol.md). `aggio` remains a compatibility alias.
 
 ## Why
 
@@ -56,14 +58,14 @@ Orchestrator or chat **return commands** are for the **human after** Cursor fini
 | Window / color / repo routing | Repository and branch verification |
 | Model / effort hint | Expected `origin/main` hash when fixed |
 | "Do not send to GIS/DEV" | Goal, scope, allowed paths |
-| Return commands (`aggio control`, `aggio dev-method`, `format`, `next`, …) | Forbidden paths and actions |
+| Return commands (`agg control`, `agg dev-method`, `format`, `next`, …) | Forbidden paths and actions |
 | | Validation commands |
 | | Selective commit and push when authorized |
 | | Final report with **verbatim** git output |
 
 ## Forbidden inside copyable prompt
 
-- `aggio control`, `aggio dev-method`, and other orchestrator/chat return commands
+- `agg control`, `agg dev-method`, and other human return lines intended for another orchestrator/chat
 - Markdown **tables** for final git output (use fenced `text` blocks or plain verbatim lines)
 - Summaries instead of verbatim `git ls-remote` / `git log` / `git status`
 - Duplicate alternate prompts without a real decision gate

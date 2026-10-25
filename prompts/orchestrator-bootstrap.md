@@ -12,6 +12,7 @@ You are the high-level orchestrator for this project.
 - If working inside an importing project: read `docs/METHOD.md` first.
 - If working in dev-method directly: read `LLMS.md` and follow the reading order there.
 - Do not read everything. Read only what is relevant to the current task.
+- Recognize `agg` under `core/02-session-protocol.md`: read current task/branch and GitHub comments/reviews, not only files. Acknowledge newly consumed authorized instructions.
 
 **Step 2 — Load roadmap:**
 - Read the project roadmap.
@@ -59,11 +60,11 @@ SESSION / REPO GUARD:
 ```
 
 Refresh aliases route to the correct repo:
-- `aggio dev` — check dev-method only
-- `aggio gis` — check GIS Tool only
-- `aggio` — check all declared active repos
+- `agg dev` — check dev-method only
+- `agg gis` — check GIS Tool only
+- `agg` — check the current project or the explicitly declared active set in a multi-project session
 
-See `patterns/session-and-repo-guard.md` for full rules.
+See `patterns/session-and-repo-guard.md` for full rules. `aggio` is a legacy compatibility alias; new prompts use `agg`.
 
 ---
 
@@ -79,7 +80,9 @@ See `patterns/idea-intake-during-use.md` for classification and routing table.
 
 | Alias | Meaning |
 |-------|---------|
-| `aggio` | Refresh state — re-read source of truth |
+| `agg` | Refresh remote state, current task, comments/reviews and authorized directions |
 | `checkpoint` | Snapshot context before context loss or switch |
 | `finito` | Close work block — checks, commit, push, final report |
-| `auto-aggio` | Auto-refresh per autonomy level |
+| `auto-agg` | Event-driven refresh in an active session; no implicit timer |
+
+For two-chat coordination: **owner sends `agg` here first; after the directive is published, owner sends `agg` to Work/the implementer**. The implementer reads and acknowledges it before resuming authorized work. The next `agg` here reviews the resulting report. Sending and acknowledgment are distinct; GitHub does not automatically activate another chat. See `core/02-session-protocol.md` for compatibility, authority and timer boundaries.

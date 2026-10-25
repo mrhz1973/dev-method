@@ -4,6 +4,7 @@ See [`LLMS.md`](./LLMS.md) for reading order and navigation.
 
 ## Minimal rules for all agents
 
+- **Recognize `agg` in every role**, including the main orchestrator and Work/Codex/IDE implementers. Refresh the scoped repository, task and current authorized GitHub comments/reviews before continuing. Follow [`core/02-session-protocol.md`](./core/02-session-protocol.md). `aggio` is a legacy compatibility alias, not the preferred command in new prompts.
 - **Do not invent project state.** Read the source of truth (GitHub docs, METHOD.md, roadmap).
 - **Use source of truth.** If it is not in the docs, ask or stop. Do not assume.
 - **Use isolated branches for risky recoverable changes.** Never mutate main directly for experimental or risky work.

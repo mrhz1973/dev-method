@@ -22,17 +22,24 @@ SESSION / REPO GUARD:
 - No shell command without an explicit path when multiple repos or workstations are active.
 - No clone if the user confirms the local folder already exists.
 - No pull / commit / push / reset / clean before validating: repo top-level, remote URL, branch, and status.
-- When the user writes a generic refresh command, the orchestrator must know whether it applies to one repo or all active repos before proceeding.
+- Generic refresh scope must be resolved by the receiving agent, whether orchestrator or implementer, before proceeding.
 
-## Refresh aliases (example convention)
+## Refresh aliases
+
+Canonical spelling: **`agg`**. Follow [`core/02-session-protocol.md`](../core/02-session-protocol.md) for the read and acknowledgment contract.
 
 | User writes | Meaning |
 |-------------|---------|
-| `aggio dev` | Check and refresh dev-method only |
-| `aggio gis` | Check and refresh GIS Tool only |
-| `aggio`     | Check and refresh all declared active repos |
+| `agg dev` / `agg dev-method` | Refresh dev-method only, when these target aliases are declared |
+| `agg gis` | Refresh GIS Tool only, when that target alias is declared |
+| `agg <target>` | Refresh only the explicitly mapped target |
+| `agg` | Refresh the current single-project scope, or the explicitly declared active set in a multi-project orchestrator |
 
-The orchestrator must resolve which repos are "active" before executing any refresh alias.
+Legacy `aggio` forms retain identical semantics. New prompts use `agg`. Unknown targets require clarification, not access to unrelated repositories.
+
+Refresh includes the active task head, GitHub conversation comments, review submissions and inline reviews. A clean local main does not prove it contains an unmerged task branch. The implementer must read and acknowledge authorized new directions before continuing its delegated block.
+
+In two-chat coordination, the owner sends `agg` to the main orchestrator first, then to Work/the implementer after publication of the directive. Each chat reports the latest instructions it actually read. No implicit timer, cross-chat message, merge, cleanup or CAD authorization is created.
 
 ## Enforcement
 
