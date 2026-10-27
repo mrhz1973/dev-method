@@ -1,6 +1,6 @@
 # templates/ide-agent-handoff-task.md — IDE Agent Handoff Task
 
-Copy-paste this template when handing a task to an IDE agent (Windsurf/Cascade, Cursor, Claude Code, or equivalent).
+Copy-paste this template when the user explicitly delegates a task to Cursor. For direct ChatGPT actions, use the same safety gates without assuming local IDE access.
 Replace all `ALL_CAPS` placeholders. Remove unused optional sections.
 
 **Outside the copyable block:** routing hints and human return commands (`aggio control`, `aggio dev-method`, `format`, `next`, …). Do not put those inside the fenced prompt — see `patterns/cursor-prompt-format-contract.md`.
@@ -10,7 +10,7 @@ Replace all `ALL_CAPS` placeholders. Remove unused optional sections.
 ```
 TASK: [short title]
 Mode: CODE | PLAN | DEBUG
-Preferred implementer: Windsurf Cascade | Cursor | Claude Code | other
+Preferred implementer: ChatGPT | Cursor (optional, user-authorized)
 Preferred model: lightweight | standard | stronger
 Effort: low | medium | high
 
