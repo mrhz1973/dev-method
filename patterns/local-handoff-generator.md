@@ -22,7 +22,7 @@ Pre-runner automation layer. Reads an operational repo's orchestrator docs and p
 | `OPERATIONAL_PATH` | Absolute local path to that repo |
 | `METHOD_REPO_REFERENCE` | Path or pinned tag of this dev-method repo (read-only) |
 | `TASK_DISCOVERY_DOCS` | Paths inside the operational repo to read: typically `docs/orchestrator/latest.md` and the latest `docs/orchestrator/inbox/*.md` named by `latest.md` |
-| `EXPECTED_IMPLEMENTER` | `Windsurf/Cascade` (current), `Cursor` (future), `Claude Code` (fallback) |
+| `EXPECTED_IMPLEMENTER` | `Cursor` (optional, explicitly delegated by the user); default implementation is direct via ChatGPT when tools allow it |
 | `ALLOWED_FILES` | Explicit list of files the implementer may stage |
 | `FORBIDDEN_FILES` | Explicit list of files / repos the implementer must not touch |
 | `COMMIT_MESSAGE` | Proposed commit message if known; otherwise `[TBD]` |
@@ -127,7 +127,7 @@ A local script that generates a ready-to-review handoff prompt file. Still pre-r
 handoff-generate \
   --repo   <OPERATIONAL_PATH> \
   --method <METHOD_PATH> \
-  --implementer windsurf \
+  --implementer cursor \
   --out    <OPERATIONAL_PATH>/docs/orchestrator/handoff/current.md
 ```
 
@@ -139,7 +139,7 @@ All flags are positional or named. `--out` is optional; default is stdout.
 |---|---|---|
 | `--repo` | yes | Absolute path to the operational repo |
 | `--method` | yes | Path or pinned-tag reference to dev-method (read-only) |
-| `--implementer` | yes | `windsurf` \| `cursor` \| `claude-code` |
+| `--implementer` | yes | `cursor` (optional, user-authorized) |
 | `--out` | no | Output file path; defaults to stdout |
 | `--next-pass` | no | Override the expected-next-pass value extracted from discovery docs |
 | `--commit-msg` | no | Override the proposed commit message |
@@ -157,7 +157,7 @@ The script writes one file (or stdout) containing:
 
 Operational repo:   <OPERATIONAL_REPO>
 Operational path:   <OPERATIONAL_PATH>
-Implementer target: <windsurf | cursor | claude-code>
+Implementer target: <cursor>
 Method reference:   <METHOD_PATH or tag>
 Discovery docs:     <list of docs read>
 
@@ -195,7 +195,7 @@ The script must:
 - Never stage, commit, push, deploy, tag, release, reset, clean, stash, delete, or force-push.
 - Never read secrets, credentials, `.env`, or token files.
 - Never call provider APIs.
-- Never launch n8n, OpenClaw, Windsurf, Cursor, Claude Code, or any runner.
+- Never launch n8n, OpenClaw, Cursor, or any runner.
 - Stop with a clear error if `--repo` path is missing or is not a git repository.
 - Warn (do not fail) if discovery docs cannot resolve a next-task candidate — output the prompt with `[TASK NOT RESOLVED — human must fill in]` placeholders.
 
@@ -232,7 +232,7 @@ Future dry-run test using GIS Tool:
 |---|---|
 | Input repo | `C:\Users\mrhz\Documents\AI\GitHub\cursor-coordinate-converter` |
 | Method repo | `C:\Users\mrhz\Documents\AI\GitHub\dev-method` |
-| Implementer | `windsurf` |
+| Implementer | `cursor` (manual delegation only) |
 | Expected output | `docs/orchestrator/handoff/current.md` written inside the operational repo |
 | Pass condition | Prompt generated; no code executed; no commit/push; no runtime actions; output contains all safety guards; human review notice present |
 
