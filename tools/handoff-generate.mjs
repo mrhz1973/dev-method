@@ -16,7 +16,7 @@ Usage:
   node tools/handoff-generate.mjs \\
     --repo   <OPERATIONAL_PATH>   \\
     --method <METHOD_PATH>        \\
-    --implementer windsurf        \\
+    --implementer cursor        \\
     [--out <OUTPUT_PATH>]         \\
     [--stdout]                    \\
     [--dry-run]                   \\
@@ -31,7 +31,7 @@ Usage:
 Flags:
   --repo               Absolute path to operational repo (required)
   --method             Path to dev-method repo (required)
-  --implementer        windsurf | cursor | claude-code (required)
+  --implementer        cursor (required; user-authorized optional delegation)
   --out                Write the full generated handoff (metadata + prompt) to this file;
                        stdout stays minimal unless --stdout is also set. Safe: no implementer,
                        commit, or push from the generator. For n8n/Telegram, prefer --out so
@@ -72,7 +72,7 @@ Safety boundaries enforced:
   - Never stages, commits, pushes, resets, cleans, stashes, deletes, deploys, tags, or releases
   - Never opens .env, *token*, *secret*, credentials* files
   - Never calls provider APIs
-  - Never launches Windsurf, Cursor, Claude Code, n8n, or any runner
+  - Never launches Cursor, n8n, or any runner
   - Writes one file only when --out is set and --dry-run is not active
 
 See: patterns/local-handoff-generator.md`.trim();
@@ -144,9 +144,7 @@ function safeRead(p) {
 // ---------------------------------------------------------------------------
 
 const IMPLEMENTER_LABELS = {
-  windsurf: 'Windsurf Cascade',
   cursor: 'Cursor',
-  'claude-code': 'Claude Code',
 };
 
 // ---------------------------------------------------------------------------
@@ -633,7 +631,7 @@ function fillTemplate(tpl, vals) {
     .replace(/FORBIDDEN_FILES/g, vals.forbiddenFiles)
     .replace(/COMMIT_MESSAGE/g, vals.commitMsg)
     .replace(/INBOX_RECORD_PATH/g, vals.inboxRecord)
-    .replace(/Windsurf Cascade \| Cursor \| Claude Code \| other/, vals.implementerLabel);
+    .replace(/ChatGPT \| Cursor \(optional, user-authorized\)/, vals.implementerLabel);
 
   if (vals.pushAuthorized !== 'yes') {
     out = out.replace(
@@ -715,7 +713,7 @@ This file is generated. Review before pasting into any IDE agent session.
 
 - The generator did NOT execute any implementation.
 - The generator did NOT commit, push, deploy, tag, or release anything.
-- The generator did NOT launch any implementer (Windsurf, Cursor, Claude Code, etc.).
+- The generator did NOT launch Cursor or any other implementer.
 ${reviewNote}
 
 ---
@@ -749,9 +747,9 @@ function main() {
   const errs = [];
   if (!args.repo) errs.push('--repo is required');
   if (!args.method) errs.push('--method is required');
-  if (!args.implementer) errs.push('--implementer is required (windsurf | cursor | claude-code)');
+  if (!args.implementer) errs.push('--implementer is required (cursor)');
   if (args.implementer && !IMPLEMENTER_LABELS[args.implementer]) {
-    errs.push(`--implementer must be windsurf, cursor, or claude-code (got: ${args.implementer})`);
+    errs.push(`--implementer must be cursor (got: ${args.implementer})`);
   }
   if (errs.length) {
     errs.forEach(e => process.stderr.write(`ERROR: ${e}\n`));
