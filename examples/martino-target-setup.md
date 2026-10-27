@@ -16,8 +16,8 @@ It is a concrete example of physical mapping for the B+ minimal confined pattern
 | Connectivity | Dell Latitude 5430 — Tailscale (secure tunnel to VPS and home network) |
 | Primary heavier inference | PC Ryzen + RTX 3060 — Ollama (heavier models) |
 | Human gate | Telegram (mobile) |
-| Primary implementer (default) | Cursor |
-| Fallback implementer | Claude Code |
+| Primary implementer (default) | ChatGPT (direct tools when available) |
+| Optional support | Cursor (only on explicit user request) |
 
 ## Notes
 
