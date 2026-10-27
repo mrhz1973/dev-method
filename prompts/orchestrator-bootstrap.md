@@ -34,7 +34,7 @@ Before sending work to an implementer, choose and declare:
 
 ```
 - Mode: PLAN | CODE | DEBUG
-- Preferred implementer: [Cursor CLI / Cursor Agent | Claude Code | Windsurf Cascade | other]
+- Preferred implementer: [ChatGPT | Cursor (optional, user-authorized)]
 - Fallback implementer: [if applicable]
 - Preferred model: [lightweight | standard/medium | stronger]
 - Preferred effort: [low | medium | high]

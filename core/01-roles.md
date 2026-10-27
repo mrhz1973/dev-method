@@ -14,8 +14,8 @@
 
 | Role | Target |
 |------|--------|
-| Primary implementer (default) | Cursor CLI / Cursor Agent |
-| Fallback implementer | Claude Code |
+| Primary implementer (default) | ChatGPT, with authorized directly available tools |
+| Optional supporting implementer | Cursor CLI / Cursor Agent, only when explicitly delegated by the user |
 | Classifier / router / risk scorer | Ollama |
 | Control plane | n8n |
 | Human gate | Telegram |
@@ -24,4 +24,4 @@
 
 Until Ollama or another automatic classifier/router is active, the **high-level orchestrator manually selects** implementer mode, preferred model, effort, and reason before routing each work block to an implementer.
 
-See `prompts/implementer-standard.md` for required routing fields.
+Do not assume any other implementer is installed or available. A project-specific `docs/METHOD.md` takes precedence over generic examples. See `prompts/implementer-standard.md` for routing fields.

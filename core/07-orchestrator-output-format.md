@@ -1,6 +1,6 @@
 Status: core v0.2.0 (pending — non ancora attivo in v0.1.0; bozza non stable; opzionale, solo ruolo orchestrator)
-Applica a: qualunque LLM in ruolo di orchestrator (ChatGPT, Claude in ruolo orchestratore, altri).
-Non applica a: LLM in ruolo di implementer (Cursor, Claude Code), che hanno proprio template.
+Applica a: ChatGPT nel ruolo di orchestratore e operatore principale.
+Non applica ai report finali di Cursor quando delegato.
 
 1. Perché esiste questa regola
 
@@ -38,7 +38,7 @@ WAIT: dati runtime n8n UI richiesti — utente deve leggere e incollare (gate ru
 
 Formulazioni come "NEXT: attendo che l'utente lanci handoff-generate" sono VIETATE. Quelle sono WAIT mascherati da NEXT.
 
-Step che richiedono Cursor, Claude Code, Windsurf, UI n8n, deploy o altro runtime esterno: WAIT con gate citato, non NEXT (l'orchestrator non esegue il runtime).
+Step che richiedono Cursor (quando esplicitamente delegato), UI n8n, deploy o altro runtime esterno: WAIT con gate citato, non NEXT (l'orchestrator non esegue il runtime).
 
 Quando usare WAIT
 
@@ -173,7 +173,7 @@ Per disciplina, dichiarare anche cosa non risolve:
 
 - Non elimina al 100% le violazioni. Il default conservativo del modello base resta. Con questa regola attiva, la frequenza scende da ~10/10 a ~1/10. Quando capita quella 1, l'utente scrive "format" e si recupera.
 - Non si autoapplica. L'orchestrator non legge GitHub all'apertura di una chat. La regola va incollata a inizio chat, oppure messa in Custom Instructions del modello, oppure richiamata con "format".
-- Non si propaga agli implementer. Cursor / Claude Code hanno proprio template di output (vedi templates/final-report-contract.md). Questa regola applica solo al ruolo orchestratore.
+- Non si propaga agli implementer. Cursor, quando delegato, ha un proprio template di output (vedi templates/final-report-contract.md). Questa regola applica solo al ruolo orchestratore.
 
 9. Come attivare la regola in una chat
 

@@ -20,7 +20,7 @@ SESSION / REPO GUARD:
 ## Routing
 
 - **Mode:** CODE
-- **Preferred implementer:** _[Cursor CLI / Cursor Agent | Claude Code | Windsurf Cascade]_
+- **Preferred implementer:** _[ChatGPT | Cursor (optional, user-authorized)]_
 - **Fallback implementer:** _[if applicable]_
 - **Preferred model:** lightweight / standard/medium / stronger
 - **Preferred effort:** low / medium / high

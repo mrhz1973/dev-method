@@ -15,7 +15,7 @@ PASS/FAIL checklist when testing the canonical rule in real use (not a copy of t
 | Criterion | PASS means |
 |-----------|------------|
 | **NEXT** | Used only when the orchestrator can actually execute the next step itself in the following turn (read files, plan, draft prompts, update docs it can edit). |
-| **WAIT** | Used when Cursor, Windsurf, Claude Code, n8n UI, deploy, human decision, or external data is required; gate cited with method reference. |
+| **WAIT** | Used when Cursor (when explicitly delegated), n8n UI, deploy, human decision, or external data is required; gate cited with method reference. |
 | **DONE** | Used when no next step is pending for the current task; user chooses what follows. |
 | **Fewer repeated "vai"** | User does not need emergency `vai` / `procedi` more than once per session to unblock undue pauses. |
 | **No false runtime authorization** | Orchestrator does not imply it will run implementer tools, push, or n8n from a NEXT line. |

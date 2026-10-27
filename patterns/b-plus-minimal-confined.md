@@ -11,8 +11,8 @@ It is a pattern, not a mandatory architecture. Projects may adopt all, part, or 
 |-----------|------|
 | **n8n** | Control plane: scheduling, triggers, routing, notifications. Does not make domain decisions. |
 | **Ollama** | Classifier / router / risk scorer / prompt compressor. Runs locally. No external API calls. |
-| **Cursor CLI / Cursor Agent** | Primary implementer. Executes tasks in the repository. |
-| **Claude Code** | Fallback implementer. Used when Cursor is unavailable or for tasks requiring different strengths. |
+| **ChatGPT** | Primary orchestrator and implementer using authorized available tools. |
+| **Cursor CLI / Cursor Agent** | Optional supporting implementer, only when specifically delegated by the user. |
 | **OpenClaw /codex-consult** | Confined high-level consult bridge. Used for design and architecture consult only — not a direct implementer. |
 | **Telegram** | Human gate. Receives Decision Packets for high-risk actions. |
 

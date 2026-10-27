@@ -1,10 +1,10 @@
 # prompts/implementer-standard.md — Implementer Standard Prompt
 
-This prompt is agent-agnostic. It is compatible with:
-- Cursor CLI / Cursor Agent (default primary implementer)
-- Claude Code (default fallback implementer)
-- Windsurf Cascade (used for controlled docs/design/implementation tasks when selected by the orchestrator)
-- Equivalent CLI/IDE implementers
+This standard applies to:
+- ChatGPT (primary operator, using only directly available and authorized tools)
+- Cursor CLI / Cursor Agent (optional support, explicitly delegated by the user)
+
+Do not assign work to a presumed third-party agent or unavailable CLI.
 
 ---
 
@@ -16,7 +16,7 @@ Until an automatic classifier/router such as Ollama is active, the high-level or
 
 ```
 - Mode: PLAN | CODE | DEBUG
-- Preferred implementer: [Cursor CLI / Cursor Agent | Claude Code | Windsurf Cascade | other]
+- Preferred implementer: [ChatGPT | Cursor (user-authorized optional support)]
 - Fallback implementer: [if applicable]
 - Preferred model: [lightweight | standard/medium | stronger]
 - Preferred effort: [low | medium | high]
@@ -75,9 +75,9 @@ When a task involves both a method/reference repo (e.g. `dev-method`) and an ope
 2. Identify the **method/reference repo** separately — may be read for guidance but must not be modified unless the task explicitly states the method repo itself is the target.
 3. Verify the **current git root** matches the operational repo before touching any file. If the workspace root is the method repo while the task target is another repo, stop immediately and tell the user to open the target repo.
 4. Do not create files, commits, or pushes in the method/reference repo while executing a task for another repo.
-5. This rule applies to all IDE agents: Windsurf/Cascade, Cursor, Claude Code, and equivalents.
+5. This rule applies whenever Cursor is explicitly delegated a task; ChatGPT must likewise verify target-repository boundaries before using GitHub or other tools.
 
-**Trigger example:** Windsurf opened in `dev-method` while the task target is `cursor-coordinate-converter` → stop, do not edit, ask user to reopen in the correct repo.
+**Trigger example:** Cursor opened in `dev-method` while the task target is `cursor-coordinate-converter` → stop, do not edit, ask user to reopen in the correct repo.
 
 ---
 
@@ -239,21 +239,14 @@ See `patterns/cursor-prompt-format-contract.md`.
 
 ## Tool-specific notes
 
+### ChatGPT
+
+- Primary orchestrator and implementer through tools actually available in the active session.
+- Verify repository, branch, diff and remote commits via GitHub actions when terminal Git is unavailable; mark local `git status` NOT_CHECKED instead of inventing evidence.
+- Preserve human gates for merges, deployments and irreversible changes.
+
 ### Cursor CLI / Cursor Agent
 
-- Default primary implementer.
-- Reads `docs/METHOD.md` or `LLMS.md` to load context before starting.
-- Uses `cursor` CLI commands or Agent mode in the Cursor IDE.
-
-### Claude Code
-
-- Default fallback implementer.
-- Load context via `CLAUDE.md` or equivalent project context file if present.
-- Use `claude` CLI commands in the terminal.
-
-### Windsurf Cascade
-
-- Used for controlled docs, design, or implementation tasks when explicitly selected by the orchestrator.
-- Reads workspace docs via the IDE panel.
-- Commits and pushes through the IDE terminal or shell tools.
-- Not the default implementer — requires explicit selection in the routing fields.
+- Optional supporting implementer, only after explicit user delegation.
+- Reads `docs/METHOD.md` or `LLMS.md` before execution.
+- Uses its own authorized local tools, an isolated branch/worktree and the ordinary preflight/test/report contracts.

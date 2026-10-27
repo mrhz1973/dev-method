@@ -68,6 +68,6 @@ This inbox records browser PASS only. Do not use as the next implementation hand
 | `Push:` | `authorized` \| `not authorized` |
 | `Target file(s):` | explicit paths, or `docs-only` |
 | `Risk level:` | `low` \| `medium` \| `high` |
-| `Preferred implementer:` | `Windsurf Cascade` \| `Cursor` \| `Claude Code` |
+| `Preferred implementer:` | `ChatGPT` \| `Cursor` (optional, user-authorized) |
 
 See also: `templates/ide-agent-handoff-task.md`, `patterns/local-handoff-generator.md`.

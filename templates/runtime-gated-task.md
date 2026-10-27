@@ -22,7 +22,7 @@ Runtime/gated tasks must not proceed if repo, path, or scope is ambiguous.
 ## Routing
 
 - **Mode:** CODE / DEBUG
-- **Preferred implementer:** _[Cursor CLI / Cursor Agent | Claude Code | Windsurf Cascade]_
+- **Preferred implementer:** _[ChatGPT | Cursor (optional, user-authorized)]_
 - **Fallback implementer:** _[if applicable]_
 - **Preferred model:** standard/medium / stronger
 - **Preferred effort:** medium / high
