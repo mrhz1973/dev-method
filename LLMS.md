@@ -38,6 +38,7 @@ Do not read everything by default. Use the reading order and conditional section
 | Context was compacted mid-debug or resuming a DEBUG task after compaction | `patterns/context-compaction-debug-reconstruction.md` |
 | Handling user ideas, bugs, or feature requests found during app usage | `patterns/idea-intake-during-use.md` |
 | Choosing whether to build globally, fix a critical local issue, measure uncertainty or defer; defining context-specific acceptance and revisiting stalled work | `patterns/context-adaptive-execution-and-acceptance.md`; optional `templates/contextual-acceptance-record.md` (candidate pilot, not a universal mandate) |
+| Organizing actual Codex subagents for ScanRuler reverse engineering with one live executor per session | `patterns/scanruler-subagent-orchestration.md`; task prompts `prompts/codex-airbox-subagents.md` and `prompts/codex-stl2-subagents.md` (scoped pilot; no Auto-Vai activation) |
 | Reviewing evidence from Airbox vs Tubo Finale before promoting an adaptive RE workflow | `examples/scanruler-airbox-tubo-context-pilot.md` |
 | Defining what happens after user confirms a manual test PASS | `patterns/qa-pass-implementer-handoff.md` |
 | Writing an IDE agent (Windsurf/Cascade/Cursor) handoff prompt | `templates/ide-agent-handoff-task.md` |
@@ -67,7 +68,7 @@ Stable consumers should pin to tags (e.g. `v0.1.0`), not `main`. `main` may cont
 
 ## Manual routing (before Ollama is active)
 
-Until Ollama or another automatic classifier/router is active, the **orchestrator must manually choose** mode, implementer, model, effort, and reason for each task.
+Until Ollama or another automatic classifier/router such as Ollama is active, the **orchestrator must manually choose** mode, implementer, model, effort, and reason for each task.
 
 Agents must not guess the operating mode. If the routing fields are missing from the task prompt, stop and ask the orchestrator to supply them.
 
