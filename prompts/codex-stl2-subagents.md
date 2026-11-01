@@ -2,6 +2,13 @@
 
 Continua il goal di reverse engineering di `Tubo Finale.obj` dall'ultimo handoff e checkpoint realmente verificati. Non ricominciare il modello e non riattivare Auto-Vai. Sei il coordinatore e l'unico esecutore live della tua sessione ScanRuler.
 
+## Prima del lavoro: versione ScanRuler obbligatoriamente verificata
+
+A ogni avvio o ripresa, incluse nuove chat e handoff, controlla su GitHub l'ultima release ufficiale stabile di `CNCKitchen/ScanRuler` e confrontala con l'app/motore realmente in uso; verifica separatamente connettore MCP attivo e compatibilità. Se non aggiornati, salva e verifica un checkpoint, riconcilia i job pendenti, aggiorna in sicurezza soltanto l'istanza interessata e verifica versione effettiva e preservazione del progetto prima di nuove modifiche CAD. Non interrompere AIRBOX o altri processi condivisi. Se sei già aggiornato, prosegui senza reinstallare. Se verifica, salvataggio o aggiornamento non sono possibili, segnala `WAIT_VERSION` e continua solo analisi offline indipendenti. Il controllo spetta a te, non a ogni subagente; non basarti su memoria o sulla sola impostazione `@latest`.
+
+Regola del proprietario da leggere e adottare nel metodo operativo:
+https://github.com/mrhz1973/dev-method/blob/b34e2aff282c870ec6d3a3d7b4e047e6276d0f9c/patterns/scanruler-version-preflight.md
+
 Routing: implementazione RE e verifica; coordinatore/esecutore Codex della presente chat. Prima di ogni delega scegli e registra ruolo, modalità, modello ed effort realmente disponibili e motivo della scelta, senza richiedere conferme per il lavoro recuperabile già autorizzato.
 
 Adotta per questo lavoro la procedura:
