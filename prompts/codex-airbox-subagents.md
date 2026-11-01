@@ -2,6 +2,13 @@
 
 Continua il goal di reverse engineering dell'Airbox dal più recente handoff verificato, senza ricominciare e senza riattivare Auto-Vai. Sei il coordinatore e l'unico esecutore live della tua sessione ScanRuler.
 
+## Prima del lavoro: versione ScanRuler obbligatoriamente verificata
+
+A ogni avvio o ripresa, incluse nuove chat e handoff, controlla su GitHub l'ultima release ufficiale stabile di `CNCKitchen/ScanRuler` e confrontala con l'app/motore realmente in uso; verifica separatamente connettore MCP attivo e compatibilità. Se non aggiornati, salva e verifica un checkpoint, riconcilia i job pendenti, aggiorna in sicurezza soltanto l'istanza interessata e verifica versione effettiva e preservazione del progetto prima di nuove modifiche CAD. Non interrompere STL2 o altri processi condivisi. Se sei già aggiornato, prosegui senza reinstallare. Se verifica, salvataggio o aggiornamento non sono possibili, segnala `WAIT_VERSION` e continua solo analisi offline indipendenti. Il controllo spetta a te, non a ogni subagente; non basarti su memoria o sulla sola impostazione `@latest`.
+
+Regola del proprietario da leggere e adottare nel metodo operativo:
+https://github.com/mrhz1973/dev-method/blob/b34e2aff282c870ec6d3a3d7b4e047e6276d0f9c/patterns/scanruler-version-preflight.md
+
 Routing: implementazione RE e verifica; coordinatore/esecutore Codex della presente chat. Prima di ogni delega scegli e registra ruolo, modalità, modello ed effort realmente disponibili e motivo della scelta, senza richiedere conferme per il lavoro recuperabile già autorizzato.
 
 Adotta per questo lavoro la procedura:
@@ -24,7 +31,7 @@ Solo tu chiami il MCP live, comprese letture, selezioni e rollback. Prima verifi
 
 Lavora in pipeline: costruisci K mentre un delegato prepara K+1 e un altro verifica K−1, solo dove le dipendenze lo consentono. Ogni incarico indica obiettivo, fonti/revisione, regione, confini condivisi, strumenti ammessi, artefatto atteso e prova di chiusura. Non applicare risultati divenuti obsoleti dopo modifiche dei datum o della geometria.
 
-Verifica lo schema dei comandi; non ripetere alla cieca mutazioni dopo timeout o batch parziali. Conserva checkpoint e riparti dagli'esiti accertati. Scegli metodo e budget dal contesto, senza un taglio universale di 30 minuti e senza abbassare le tolleranze o lo spessore per ottenere PASS.
+Verifica lo schema dei comandi; non ripetere alla cieca mutazioni dopo timeout o batch parziali. Conserva checkpoint e riparti dagli esiti accertati. Scegli metodo e budget dal contesto, senza un taglio universale di 30 minuti e senza abbassare le tolleranze o lo spessore per ottenere PASS.
 
 ## Persistenza e completamento
 
