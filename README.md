@@ -33,6 +33,10 @@ The method supports four autonomy levels (Level 0–3), allowing a project to st
 
 **dev-method** stays a method/reference repository, not an operational or runtime repo.
 
+## Context-adaptive execution pilot (unreleased)
+
+The candidate [context-adaptive execution and acceptance pattern](patterns/context-adaptive-execution-and-acceptance.md) tells an AI **when, why and how** to choose between global progress, essential local repairs, additional measurement and safe deferral based on each artifact's goals, critical path, risks and actual verification. It is not a fixed 30-minute rule or a universal tolerance. The [Airbox/Tubo Finale observations](examples/scanruler-airbox-tubo-context-pilot.md) motivate a pilot, not a verified universal speedup. Projects pinned to existing stable tags adopt any future rule explicitly through their own METHOD overlay.
+
 ## Current stable release
 
 - `v0.1.1` is the current stable tag.
