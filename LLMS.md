@@ -3,6 +3,10 @@
 This file is the compact entry point for AI agents reading this repository.
 Do not read everything by default. Use the reading order and conditional sections below.
 
+## Select the method before starting reverse engineering
+
+Owner routing directive, 2026-11-01: read [`METHODS.md`](METHODS.md), then `domains/reverse-engineering/README.md`, then exactly one of `adapters/scanruler/README.md` or `adapters/fusion/README.md`. Read the current project's own manifest/handoff and repository ref next. Do not infer engine from the historical repository name, and do not import another part's dimensions or task state. Registry `method-registry.json` distinguishes available method entries from a pending physical repository split. New projects can use `templates/re-project-bootstrap.md`; placeholders are not verified configuration. This routing change does not merge draft pilots or alter existing stable tags.
+
 ## Required reading order
 
 1. `README.md` — what dev-method is

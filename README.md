@@ -4,6 +4,17 @@
 
 It is inspired by LLM Wiki and Context Engineering practices: GitHub is the source of truth and the persistent memory for AI agents across sessions, implementers, and context switches.
 
+## Method catalog: general, domain, engine, project
+
+Start at [`METHODS.md`](METHODS.md), with machine-readable routing in [`method-registry.json`](method-registry.json). This is a selective method library, not a flat collection of every project's runtime state.
+
+- General rules remain in `core/`, `patterns/` and `templates/`.
+- Reverse-engineering principles are grouped under [`domains/reverse-engineering/`](domains/reverse-engineering/README.md).
+- Tool-specific tactics have distinct entries: [`ScanRuler`](adapters/scanruler/README.md) and [`Autodesk Fusion`](adapters/fusion/README.md). Read only the selected engine.
+- A particular part's sources, dimensions, progress and checkpoints remain in its operational repository, selected by its manifest/handoff.
+
+The intended separate ScanRuler repository is pending creation/access verification and migration; the catalog does not claim it already exists. Stable tags and draft-method validation status are unchanged.
+
 ## What it is
 
 - A set of principles, protocols, roles, and patterns for working with AI agents on real projects.

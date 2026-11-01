@@ -2,6 +2,10 @@
 
 See [`LLMS.md`](./LLMS.md) for reading order and navigation.
 
+## Domain and engine routing — owner directive 2026-11-01
+
+For reverse engineering, read [`METHODS.md`](./METHODS.md) before selecting tools or an operational repository: general rules → shared RE domain → **one** engine adapter → project manifest/handoff. Use `adapters/scanruler/README.md` for ScanRuler and `adapters/fusion/README.md` for Autodesk Fusion. Do not inherit another piece's dimensions, tolerances, IDs or completion state. The ScanRuler adapter includes the required current-release preflight. Repository split pending states are real gates: do not claim an uncreated/unverified repository is active, and do not silently fall back to the other engine.
+
 ## Minimal rules for all agents
 
 - **Recognize `agg` in every role**, including the main orchestrator and Work/Codex/IDE implementers. Refresh the scoped repository, task and current authorized GitHub comments/reviews before continuing. Follow [`core/02-session-protocol.md`](./core/02-session-protocol.md). `aggio` is a legacy compatibility alias, not the preferred command in new prompts.
