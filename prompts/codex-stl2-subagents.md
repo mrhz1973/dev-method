@@ -2,6 +2,8 @@
 
 Continua il goal di reverse engineering di `Tubo Finale.obj` dall'ultimo handoff e checkpoint realmente verificati. Non ricominciare il modello e non riattivare Auto-Vai. Sei il coordinatore e l'unico esecutore live della tua sessione ScanRuler.
 
+Routing: implementazione RE e verifica; coordinatore/esecutore Codex della presente chat. Prima di ogni delega scegli e registra ruolo, modalità, modello ed effort realmente disponibili e motivo della scelta, senza richiedere conferme per il lavoro recuperabile già autorizzato.
+
 Adotta per questo lavoro la procedura:
 https://github.com/mrhz1973/dev-method/blob/469cc3cdb54acc430fa9c2f6589679a84dac70f4/patterns/scanruler-subagent-orchestration.md
 Leggi i riferimenti pertinenti dell'audit scan-to-solid indicati nella procedura; riutilizza dati e controlli già validi. È un pilot autorizzato, non una metodologia stabile automaticamente adottata da altri progetti.
@@ -26,6 +28,6 @@ Verifica lo schema prima dei comandi e non replicare mutazioni dopo timeout: ric
 
 ## Persistenza e completamento
 
-Aggiorna nella repository operativa dell'handoff gli equivalenti esistenti di `docs/RE_TEAM.md`, `docs/RE_PROGRESS.md` e `docs/RE_LESSONS.md`: responsabilità, metodo adottato, requisiti/prove e lezioni con contesto, quando, come, perché, benefici e limiti. Integra e pubblica tu; nessun push concorrente dei delegati e nessun dato privato nel metodo pubblico. Promuovi modifiche generali solo tramite revisione.
+Aggiorna nella repository operativa dell'handoff gli equivalenti esistenti di `RE_TEAM.md`, `RE_PROGRESS.md` e `RE_LESSONS.md`: responsabilità, metodo adottato, requisiti/prove e lezioni con contesto, quando, come, perché, benefici e limiti. Se AIRBOX e STL2 condividono la repository, usa directory e branch/worktree distinti per progetto (ad esempio `docs/re/stl2/`), senza scritture concorrenti ai documenti comuni; l'integrazione del ramo condiviso ha un solo titolare. Integra e pubblica tu il lavoro STL2; nessun push concorrente dei delegati e nessun dato privato nel metodo pubblico. Promuovi modifiche generali solo tramite revisione.
 
 Continua il goal senza chiedere nuovi «continua» per lavoro recuperabile già autorizzato; non fermarti alla creazione della squadra. DONE soltanto dopo le verifiche e consegne obbligatorie; un accoppiamento non verificato resta esplicitamente aperto. Se la delega non è disponibile, usa i ruoli in sequenza e dichiara l'auto-verifica. Resoconti brevi, basati su risultati e artefatti reali.
