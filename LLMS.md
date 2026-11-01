@@ -68,7 +68,7 @@ Stable consumers should pin to tags (e.g. `v0.1.0`), not `main`. `main` may cont
 
 ## Manual routing (before Ollama is active)
 
-Until Ollama or another automatic classifier/router such as Ollama is active, the **orchestrator must manually choose** mode, implementer, model, effort, and reason for each task.
+Until Ollama or another automatic classifier/router is active, the **orchestrator must manually choose** mode, implementer, model, effort, and reason for each task.
 
 Agents must not guess the operating mode. If the routing fields are missing from the task prompt, stop and ask the orchestrator to supply them.
 
