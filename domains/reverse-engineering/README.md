@@ -1,0 +1,28 @@
+# Dominio comune — reverse engineering
+
+Questo livello è condiviso da Fusion e ScanRuler. Non contiene comandi MCP, porte, versioni dell'app o checkpoint di un pezzo.
+
+## Metodo comune
+
+Definire risultato e funzione dal contesto; preservare la sorgente; distinguere replica misurata, ricostruzione nominale e ridisegno autorizzato; suddividere in regioni funzionali con confini condivisi e dipendenze; scegliere rappresentazione e prova dello spessore prima di estendere il metodo; costruire e verificare per blocchi significativi; rivalutare la strategia quando il progresso è insufficiente.
+
+Tenere distinti esito del comando, validità del solido, fedeltà alla sorgente, spessore, accoppiamenti, editabilità, esportazione e salvataggio/riapertura. Un singolo PASS non è DONE globale. Misure e tolleranze vengono dal contratto del pezzo, non da un altro progetto. Quote dedotte, geometrie non osservate e esclusioni devono restare esplicite.
+
+Le evidenze devono identificare revisione, riferimento, unità, frame, dominio misurato, campionamento, metriche e limiti. Una tecnica si riusa quando contesto e prove lo giustificano; nessuna soglia di tempo o sequenza globale/locali è universale.
+
+## Fonti e stato
+
+Audit scan-to-solid del 31 ottobre 2026: snapshot `92451cfdee51ba9939fa7973bf002bdecf1f88be` nella repository privata `mrhz1973/TMART-Fusion-RE`, directory `docs/research/scan-to-solid-20261031/`. Il nome storico del contenitore non rende l'audit una metodologia esclusivamente Fusion. Consultare `RE_WORKFLOW_PROPOSTA.md`, il rapporto e il template regionale quando pertinenti; non copiare materiali privati nel metodo pubblico.
+
+Pilot di decisione adattiva: [snapshot verificato](https://github.com/mrhz1973/dev-method/blob/8b396f263de989f938a6aa1082534634571cab4d/patterns/context-adaptive-execution-and-acceptance.md). È una proposta applicabile per mandato, non prova di accelerazione misurata né nuova release stabile.
+
+## Selezionare la tattica
+
+- [ScanRuler](../../adapters/scanruler/README.md): progetto `.scanruler`, MCP ScanRuler e sua sessione.
+- [Autodesk Fusion](../../adapters/fusion/README.md): documento Fusion, MCP Fusion e sua sessione.
+
+Trasferimenti STEP/STL fra motori richiedono provenienza, revisione, unità/frame, originali preservati e verifiche delle proprietà alterate. Non cambiare engine perché una singola operazione fallisce senza riconciliare mandato e capacità.
+
+## Apprendimento
+
+Stato, misure e decisioni del pezzo restano nella repository operativa. Promuovere al livello comune solo lezioni indipendenti dal motore; una lezione su un comando ScanRuler va nell'adattatore ScanRuler, non in quello Fusion. Registrare sempre quando applicare, come, perché, prove e controindicazioni.

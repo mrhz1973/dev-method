@@ -1,0 +1,34 @@
+{
+  "schema": "TMART_METHOD_REGISTRY_V1",
+  "decision_date": "2026-11-01",
+  "purpose": "Method selection; not live CAD state or proof of repository migration",
+  "layers": {
+    "general": ["core/", "patterns/", "templates/"],
+    "domain": "domains/reverse-engineering/README.md",
+    "engine": "adapters/<engine>/README.md",
+    "project_state": "operational repository: projects/<project_id>/"
+  },
+  "engines": {
+    "scanruler": {
+      "entrypoint": "adapters/scanruler/README.md",
+      "native_extension": ".scanruler",
+      "mcp_family": "scanruler",
+      "target_operational_repository": "mrhz1973/TMART-ScanRuler-RE",
+      "target_visibility": "private",
+      "repository_migration_status": "PENDING_CREATION_OR_ACCESS_VERIFICATION_AND_MIGRATION",
+      "current_projects": "Use each current handoff ref; never infer main or another project's branch",
+      "automatic_fusion_fallback": false
+    },
+    "fusion": {
+      "entrypoint": "adapters/fusion/README.md",
+      "native_extension": ".f3d",
+      "mcp_family": "fusion",
+      "operational_repository": "mrhz1973/TMART-Fusion-RE",
+      "scanruler_legacy_material": "TRANSITION_ONLY",
+      "automatic_scanruler_fallback": false
+    }
+  },
+  "inherit_project_dimensions": false,
+  "change_running_sessions": false,
+  "enable_autovai": false
+}
