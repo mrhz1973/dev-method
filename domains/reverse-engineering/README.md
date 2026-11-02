@@ -2,6 +2,10 @@
 
 Questo livello è condiviso da Fusion e ScanRuler. Non contiene comandi MCP, porte, versioni dell'app o checkpoint di un pezzo.
 
+## Priorità delle note e revisione con il proprietario
+
+Direttiva del 2 novembre 2026: leggere e applicare [prima le note, poi la rifinitura concordata](notes-first-visual-review.md). Le note sono la coda delle correzioni, non solo oggetto di analisi. Quando resta circa il 20% del lavoro, mostrare il candidato reale e attendere le annotazioni del proprietario prima della rifinitura finale; anticipare il confronto se i tentativi non producono risultati. Se forma generale e note finali sono già state approvate/assegnate, lavorare su quelle senza ripetere l'approvazione o riaprire l'intero audit. Non derogare ai controlli tecnici essenziali.
+
 ## Metodo comune
 
 Definire risultato e funzione dal contesto; preservare la sorgente; distinguere replica misurata, ricostruzione nominale e ridisegno autorizzato; suddividere in regioni funzionali con confini condivisi e dipendenze; scegliere rappresentazione e prova dello spessore prima di estendere il metodo; costruire e verificare per blocchi significativi; rivalutare la strategia quando il progresso è insufficiente.
