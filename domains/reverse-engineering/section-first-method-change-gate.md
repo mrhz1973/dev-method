@@ -32,7 +32,7 @@ Comunicare in poche righe: metodo concordato; operazione bloccata ed evidenza; u
 
 Riprendere soltanto dopo consenso esplicito riferito alla proposta e al suo ambito. Silenzio, scadenza del budget, nuovi subagenti, pressione a finire, un goal automatico o un generico «continua» non autorizzano un cambio non approvato. Una risposta di assenso a una singola proposta chiaramente identificata è sufficiente; registrarla una volta con il riferimento alla decisione. L'approvazione non supera permessi o vincoli di sicurezza.
 
-## 5. Precedenza e adozzione
+## 5. Precedenza e adozione
 
 Questa direttiva prevale sulle precedenti istruzioni di autonomia, cambio strategia dopo tentativi falliti, prosecuzione su regioni indipendenti, prima bozza in 20 minuti e affinamento adattivo. I budget e le tolleranze già autorizzati restano validi nel metodo concordato, ma non giustificano deroghe al blocco. Non richiede rollback, cancellazione di studi o ripartenza del CAD esistente. La versione che il proprietario indica come migliore resta preservata: nessuna sostituzione senza consenso.
 
