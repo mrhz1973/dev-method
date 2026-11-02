@@ -7,8 +7,11 @@
 1. Leggere il manifest e l'handoff del progetto, confermare scansione/revisione/frame e unico owner della sessione effettiva.
 2. Applicare il [preflight versioni](https://github.com/mrhz1973/dev-method/blob/8b396f263de989f938a6aa1082534634571cab4d/patterns/scanruler-version-preflight.md): ultima release ufficiale GitHub, app/motore in esecuzione e connettore MCP distinti; checkpoint verificato prima di aggiornare e controllo del progetto dopo. Non aggiornare processi condivisi alla cieca.
 3. Leggere gli schemi esposti dalla build collegata; usare solo comandi ScanRuler. Gestire job in coda e batch parziali riconciliando gli effetti prima del retry. Un nuovo client non dimostra isolamento dal vecchio holder.
-4. Applicare il [workflow subagenti ScanRuler](https://github.com/mrhz1973/dev-method/blob/8b396f263de989f938a6aa1082534634571cab4d/patterns/scanruler-subagent-orchestration.md): un solo esecutore live, delegati su snapshot revisionati, percorsi e branch distinti, QA separato. Pilot da valutare, non velocità garantita.
-5. Salvare il nativo `.scanruler`, esportare e rileggere secondo il contratto del pezzo. Non scambiare tessellazione, fedeltà allo scan e validità B-Rep.
+4. Per contorni e sezioni applicare [fitting nativo e sketch regolari](native-section-sketch-workflow.md): usare prima linee, archi, spline a pochi punti, vincoli e riuso dei profili dell'applicazione. Non ricopiare il rumore punto per punto né reimplementare il fitter in script senza un limite nativo concreto. Appena il profilo è idoneo, costruire e verificare il blocco; non inseguire residui infinitesimali estranei alla funzione.
+5. Applicare il [workflow subagenti ScanRuler](https://github.com/mrhz1973/dev-method/blob/8b396f263de989f938a6aa1082534634571cab4d/patterns/scanruler-subagent-orchestration.md): un solo esecutore live, delegati su snapshot revisionati, percorsi e branch distinti, QA separato. Pilot da valutare, non velocità garantita. Per un contorno semplice evitare più indagini parallele senza una decisione da sbloccare.
+6. Salvare il nativo `.scanruler`, esportare e rileggere secondo il contratto del pezzo. Non scambiare tessellazione, fedeltà allo scan e validità B-Rep.
+
+Restano prevalenti [note del proprietario e revisione visiva](../../domains/reverse-engineering/notes-first-visual-review.md) e [resoconti brevi senza Auto-Vai](../../domains/reverse-engineering/reporting-without-autovai.md), anche rispetto a prompt storici fissati a revisioni precedenti. Registrare l'adozione nel prossimo aggiornamento utile, non creare un audit aggiuntivo.
 
 ## Esclusioni
 
