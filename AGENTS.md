@@ -25,6 +25,7 @@ For AIRBOX, STL2 and RE work without Auto-Vai, apply [`reporting-without-autovai
 ## Minimal rules for all agents
 
 - **Recognize `agg` in every role**, including the main orchestrator and Work/Codex/IDE implementers. Refresh the scoped repository, task and current authorized GitHub comments/reviews before continuing. Follow [`core/02-session-protocol.md`](./core/02-session-protocol.md). `aggio` is a legacy compatibility alias, not the preferred command in new prompts.
+- **ScanRuler: verify the latest official GitHub release before every start or resumption of live work.** Follow [`patterns/scanruler-version-preflight.md`](./patterns/scanruler-version-preflight.md). Check the actual app/engine and MCP runtime separately; if outdated, preserve a verified checkpoint, update the affected instance safely and verify the reopened project before new CAD edits. One coordinator owns the check/update; subagents do not restart shared sessions. Never infer “up to date” from memory or `@latest`. Report blocked verification/update rather than silently continuing on an old build. Owner-directed rule, 2026-11-01; no automatic change to existing release pins or running chats.
 - **Do not invent project state.** Read the source of truth (GitHub docs, METHOD.md, roadmap).
 - **Use source of truth.** If it is not in the docs, ask or stop. Do not assume.
 - **Use isolated branches for risky recoverable changes.** Never mutate main directly for experimental or risky work.

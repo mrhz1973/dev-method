@@ -41,6 +41,9 @@ Owner routing directive, 2026-11-01: read [`METHODS.md`](METHODS.md), then `doma
 | Multiple repos, sessions, or workstations are active | `patterns/session-and-repo-guard.md` |
 | Context was compacted mid-debug or resuming a DEBUG task after compaction | `patterns/context-compaction-debug-reconstruction.md` |
 | Handling user ideas, bugs, or feature requests found during app usage | `patterns/idea-intake-during-use.md` |
+| Choosing whether to build globally, fix a critical local issue, measure uncertainty or defer; defining context-specific acceptance and revisiting stalled work | `patterns/context-adaptive-execution-and-acceptance.md`; optional `templates/contextual-acceptance-record.md` (candidate pilot, not a universal mandate) |
+| Organizing actual Codex subagents for ScanRuler reverse engineering with one live executor per session | `patterns/scanruler-subagent-orchestration.md`; task prompts `prompts/codex-airbox-subagents.md` and `prompts/codex-stl2-subagents.md` (scoped pilot; no Auto-Vai activation) |
+| Reviewing evidence from Airbox vs Tubo Finale before promoting an adaptive RE workflow | `examples/scanruler-airbox-tubo-context-pilot.md` |
 | Defining what happens after user confirms a manual test PASS | `patterns/qa-pass-implementer-handoff.md` |
 | Writing an IDE agent (Windsurf/Cascade/Cursor) handoff prompt | `templates/ide-agent-handoff-task.md` |
 | Planning prompt-generation or runner automation for IDE-agent handoffs | `patterns/local-handoff-generator.md` |

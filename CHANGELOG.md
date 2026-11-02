@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added a **candidate context-adaptive execution and acceptance pilot**: trigger/choice/validation/learning policy in `patterns/context-adaptive-execution-and-acceptance.md`, Airbox/Tubo Finale evidence (and limits) in `examples/scanruler-airbox-tubo-context-pilot.md`, and optional `templates/contextual-acceptance-record.md`. No fixed global timebox or tolerance, no auto-update of pinned projects, and no runtime execution implied.
+
 - Clarified that implementers perform routine safe local repo update during preflight for any target repo; humans are only asked for update output when a diagnostic gate exists.
 - Clarified that human return commands such as aggio control/dev-method stay outside copyable Cursor prompts.
 - Added control-plane advanced pilot / strategic sync policy — `patterns/operational-repo-to-method-sync.md`, `examples/control-plane.md`, README and LLMS pointers.
