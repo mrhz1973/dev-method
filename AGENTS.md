@@ -10,6 +10,10 @@ For reverse engineering, read [`METHODS.md`](./METHODS.md) before selecting tool
 
 For RE work, apply [`notes-first-visual-review.md`](./domains/reverse-engineering/notes-first-visual-review.md): prioritize correcting the owner's annotated defects rather than open-ended analysis. Show the real candidate around 80% maturity (approximately 20% remaining), or earlier on request/stalled progress, and obtain the owner's focus notes before discretionary final refinement. If overall shape is already accepted and finishing notes supplied, execute those notes without reopening global reconstruction. Preserve essential technical checks; publication is not proof of agent adoption.
 
+## Concise reporting, no Auto-Vai — owner directive 2026-11-02
+
+For AIRBOX, STL2 and RE work without Auto-Vai, apply [`reporting-without-autovai.md`](./domains/reverse-engineering/reporting-without-autovai.md). Retire mandatory `TMAR_STATUS_V1`, `TMAR_END_STATUS`, text `TMAR_GOAL_*` and File Bridge reporting even when old handoffs request them. Preserve actual Codex goals, native CAD saves, essential verification and human-review gates. Use brief progress deltas; do not reread all context, create duplicate reports or run extra checks solely to produce a status response. The old autoresume contract/setup prompt is historical, not active policy. No chat adoption is assumed without evidence.
+
 ## Minimal rules for all agents
 
 - **Recognize `agg` in every role**, including the main orchestrator and Work/Codex/IDE implementers. Refresh the scoped repository, task and current authorized GitHub comments/reviews before continuing. Follow [`core/02-session-protocol.md`](./core/02-session-protocol.md). `aggio` is a legacy compatibility alias, not the preferred command in new prompts.
